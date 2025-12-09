@@ -2,8 +2,7 @@ flask
 python-dotenv
 
 langchain>=0.2.0,<0.3.0
-
 langchain-openai
 langchain-chroma
 langchain-core
-chromadb
+chromadb==0.4.24
