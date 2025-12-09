@@ -23,26 +23,63 @@ CHAT_HISTORY_FILE = "chat_history.json"
 KB_FILE = "kb_aurex.json"
 
 
-def load_chat_history():
-    """Load chat history dari file JSON"""
-    if os.path.exists(CHAT_HISTORY_FILE):
-        try:
-            with open(CHAT_HISTORY_FILE, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except Exception as e:
-            print(f"Error loading chat history: {e}")
-            return []
-    return []
+# ========= PER-SESSION CHAT HISTORY =========
 
+def _load_all_histories():
+    """
+    Load seluruh history dari file.
+    Struktur yang diharapkan:
+    {
+        "session_id_1": [...messages...],
+        "session_id_2": [...messages...],
+        ...
+    }
+    """
+    if not os.path.exists(CHAT_HISTORY_FILE):
+        return {}
 
-def save_chat_history(messages):
-    """Save chat history ke file JSON"""
     try:
-        with open(CHAT_HISTORY_FILE, 'w', encoding='utf-8') as f:
-            json.dump(messages, f, ensure_ascii=False, indent=2)
+        with open(CHAT_HISTORY_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        # Backward compatibility: kalau masih berupa list lama → bungkus jadi satu session "global"
+        if isinstance(data, list):
+            return {"_legacy_global": data}
+
+        if isinstance(data, dict):
+            return data
+
+        print("Warning: chat_history.json tidak dalam format yang diharapkan, reset ke dict kosong.")
+        return {}
+    except Exception as e:
+        print(f"Error loading chat history: {e}")
+        return {}
+
+
+def _save_all_histories(data: dict):
+    """Simpan seluruh history (semua session) ke file JSON."""
+    try:
+        with open(CHAT_HISTORY_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
     except Exception as e:
         print(f"Error saving chat history: {e}")
 
+
+def load_chat_history(session_id: str):
+    """
+    Ambil history untuk satu session_id tertentu.
+    """
+    all_histories = _load_all_histories()
+    return all_histories.get(session_id, [])
+
+
+def save_chat_history(session_id: str, messages):
+    """
+    Simpan history untuk satu session_id tertentu.
+    """
+    all_histories = _load_all_histories()
+    all_histories[session_id] = messages
+    _save_all_histories(all_histories)
 
 def load_static_knowledge_base():
     """
@@ -507,11 +544,14 @@ def index():
 @app.route('/get_history', methods=['GET'])
 def get_history():
     try:
-        messages = load_chat_history()
+        session_id = request.args.get("session_id", "").strip()
+        if not session_id:
+            return jsonify({"success": False, "error": "session_id is required"}), 400
+
+        messages = load_chat_history(session_id)
         return jsonify({"success": True, "messages": messages})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
-
 
 @app.route('/send_message', methods=['POST'])
 def send_message():
@@ -525,19 +565,24 @@ def send_message():
     }
     """
     try:
-        data = request.get_json()
-        user_message = data.get('message', '').strip()
-        mode = data.get('mode', 'medis')           # default: medis
-        topic = data.get('topic', '').strip()      # boleh kosong
-        quickpanel_intent = data.get('quickpanel_intent')  # ✅ NEW
+                data = request.get_json()
+        user_message = data.get("message", "").strip()
+        mode = data.get("mode", "medis")           # default: medis
+        topic = data.get("topic", "").strip()      # boleh kosong
+        quickpanel_intent = data.get("quickpanel_intent")
+        session_id = data.get("session_id", "").strip()
+
+        if not session_id:
+            return jsonify({"error": "session_id is required"}), 400
 
         if not user_message:
             return jsonify({"error": "Message cannot be empty"}), 400
 
-        if not os.getenv('OPENAI_API_KEY'):
+        if not os.getenv("OPENAI_API_KEY"):
             return jsonify({"error": "OpenAI API key is not set!"}), 500
 
-        messages = load_chat_history()
+        # 🔥 sekarang history tergantung session_id
+        messages = load_chat_history(session_id)
 
         # ======================================================
         # ✅ 1. HANDLE QUICKPANEL INTENT DULU
@@ -598,7 +643,7 @@ def send_message():
                 {"is_user": False, "a": answer,       "timestamp": timestamp},
             ]
             messages.extend(new_messages)
-            save_chat_history(messages)
+            save_chat_history(session_id, messages)
 
             # Opsional: simpan juga ke vectorstore dinamis
             add_to_vectorstore(user_message, answer)
@@ -654,7 +699,7 @@ def send_message():
             {"is_user": False, "a": answer,       "timestamp": timestamp},
         ]
         messages.extend(new_messages)
-        save_chat_history(messages)
+        save_chat_history(session_id, messages)
 
         # --- choose_interfaces tetap seperti semula ---
         interfaces_payload = []
@@ -703,16 +748,22 @@ def get_interfaces():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
-
 @app.route('/reset', methods=['POST'])
 def reset():
-    """Reset hanya chat history (UI), tidak menghapus vectorstore / KB statis."""
+    """
+    Reset hanya chat history UNTUK SATU SESSION,
+    tidak menghapus vectorstore / KB statis.
+    """
     try:
-        save_chat_history([])
+        data = request.get_json() or {}
+        session_id = data.get("session_id", "").strip()
+        if not session_id:
+            return jsonify({"success": False, "error": "session_id is required"}), 400
+
+        save_chat_history(session_id, [])
         return jsonify({"success": True, "message": "Chat history reset successfully"})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
-
 
 @app.route('/clear_all', methods=['POST'])
 def clear_all():
@@ -749,3 +800,4 @@ def clear_all():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
+
