@@ -81,6 +81,7 @@ def save_chat_history(session_id: str, messages):
     all_histories[session_id] = messages
     _save_all_histories(all_histories)
 
+
 def load_static_knowledge_base():
     """
     Load knowledge base statis dari file kb_aurex.json.
@@ -453,7 +454,6 @@ def setup_rag_chain():
             (2) Soft skills & produktivitas.
         - Anda boleh menambahkan kalimat singkat seperti:
             "Untuk topik tersebut, sebaiknya Anda berkonsultasi dengan ahli yang relevan atau mencari referensi khusus di luar sistem ini."
-        - Jangan mengarang data, prediksi, atau opini di luar dua domain utama tersebut.
 
         =============================
         💬 GAYA BAHASA & KOMUNIKASI
@@ -553,6 +553,7 @@ def get_history():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
+
 @app.route('/send_message', methods=['POST'])
 def send_message():
     """
@@ -561,11 +562,12 @@ def send_message():
         "message": "...",
         "mode": "medis" | "soft",
         "topic": "Tanya Keluhan" | "Rekomendasi Obat" | ...,
-        "quickpanel_intent": "ask_doctor" | "ask_training" | "ask_help" | ...
+        "quickpanel_intent": "ask_doctor" | "ask_training" | "ask_help" | ...,
+        "session_id": "..."
     }
     """
     try:
-                data = request.get_json()
+        data = request.get_json()
         user_message = data.get("message", "").strip()
         mode = data.get("mode", "medis")           # default: medis
         topic = data.get("topic", "").strip()      # boleh kosong
@@ -639,8 +641,8 @@ def send_message():
             # Simpan history seperti biasa
             timestamp = datetime.now().isoformat()
             new_messages = [
-                {"is_user": True,  "q": user_message, "timestamp": timestamp},
-                {"is_user": False, "a": answer,       "timestamp": timestamp},
+                {"is_user": True, "q": user_message, "timestamp": timestamp},
+                {"is_user": False, "a": answer, "timestamp": timestamp},
             ]
             messages.extend(new_messages)
             save_chat_history(session_id, messages)
@@ -695,8 +697,8 @@ def send_message():
         # Simpan history ke file
         timestamp = datetime.now().isoformat()
         new_messages = [
-            {"is_user": True,  "q": user_message, "timestamp": timestamp},
-            {"is_user": False, "a": answer,       "timestamp": timestamp},
+            {"is_user": True, "q": user_message, "timestamp": timestamp},
+            {"is_user": False, "a": answer, "timestamp": timestamp},
         ]
         messages.extend(new_messages)
         save_chat_history(session_id, messages)
@@ -743,10 +745,10 @@ def get_interfaces():
         except Exception as e:
             app.logger.warning(f"choose_interfaces failed: {e}")
             interfaces_payload = []
-
         return jsonify({"success": True, "interfaces": interfaces_payload})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+
 
 @app.route('/reset', methods=['POST'])
 def reset():
@@ -765,6 +767,7 @@ def reset():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
+
 @app.route('/clear_all', methods=['POST'])
 def clear_all():
     """
@@ -778,10 +781,6 @@ def clear_all():
     """
     try:
         import shutil
-
-        # ❌ DULU: chat_history.json ikut dihapus
-        # if os.path.exists(CHAT_HISTORY_FILE):
-        #     os.remove(CHAT_HISTORY_FILE)
 
         # ✅ Sekarang: hanya hapus memori dinamis (chroma_db)
         persist_dir = "./chroma_db"
@@ -800,4 +799,3 @@ def clear_all():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
-
