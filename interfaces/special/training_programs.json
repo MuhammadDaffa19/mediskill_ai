@@ -1,0 +1,130 @@
+{
+    "id": "training_programs",
+    "summary_card": {
+        "title": "Pelatihan Soft Skills",
+        "subtitle": "Program pengembangan diri — Online & Offline"
+    },
+    "grid": [
+
+        {
+        "key": "time_management",
+        "icon": "⏳",
+        "title": "Manajemen Waktu",
+        "short_desc": "Pelatihan mengatur waktu, fokus, dan prioritas.",
+        "details": "Pelatihan ini membantu peserta memahami teknik Time Blocking, Prioritization Matrix, Pomodoro, dan Energy Management untuk meningkatkan produktivitas harian.",
+        "programs": [
+            {
+            "mode": "Online",
+            "name": "Time Blocking Mastery",
+            "duration": "2 jam",
+            "price": 120000,
+            "includes": ["Modul PDF", "Template kalender", "Rekaman video"]
+            },
+            {
+            "mode": "Offline",
+            "name": "Productivity Bootcamp",
+            "duration": "4 jam",
+            "price": 250000,
+            "includes": ["Workshop langsung", "Simulasi time audit", "Konsultasi singkat"]
+            }
+        ]
+        },
+
+        {
+        "key": "stress_management",
+        "icon": "🧘",
+        "title": "Manajemen Stres & Work–Life Balance",
+        "short_desc": "Kelola stres, jaga kesehatan mental, dan seimbangkan pola hidup.",
+        "details": "Pelatihan mencakup mindful working, teknik pernapasan, reframing pikiran, dan strategi menghindari burnout akibat beban kerja berlebih.",
+        "programs": [
+            {
+            "mode": "Online",
+            "name": "Mindful Work Session",
+            "duration": "90 menit",
+            "price": 90000,
+            "includes": ["Latihan napas", "Guided mindfulness", "Checklist manajemen stres"]
+            },
+            {
+            "mode": "Offline",
+            "name": "Stress Reset Workshop",
+            "duration": "3 jam",
+            "price": 210000,
+            "includes": ["Praktik langsung", "Studi kasus burnout", "Kartu teknik relaksasi"]
+            }
+        ]
+        },
+
+        {
+        "key": "effective_communication",
+        "icon": "💬",
+        "title": "Komunikasi Efektif & Kerja Tim",
+        "short_desc": "Bangun komunikasi jelas, profesional, dan kolaboratif.",
+        "details": "Program ini berfokus pada komunikasi interpersonal, active listening, assertiveness, handling conflict, dan membangun kerja tim yang sehat.",
+        "programs": [
+            {
+            "mode": "Online",
+            "name": "Effective Communication 101",
+            "duration": "2 jam",
+            "price": 130000,
+            "includes": ["Studi kasus", "Template komunikasi profesional", "Roleplay online"]
+            },
+            {
+            "mode": "Offline",
+            "name": "Team Collaboration Workshop",
+            "duration": "3 jam",
+            "price": 240000,
+            "includes": ["Simulasi kerja tim", "Latihan problem solving", "Game kolaboratif"]
+            }
+        ]
+        },
+
+        {
+        "key": "habit_building",
+        "icon": "🔥",
+        "title": "Produktivitas & Habit Building",
+        "short_desc": "Bangun kebiasaan positif dengan metode ilmiah.",
+        "details": "Pelatihan mencakup strategi Atomic Habits, habit stacking, environment design, dan teknik konsistensi jangka panjang.",
+        "programs": [
+            {
+            "mode": "Online",
+            "name": "Atomic Habits Starter",
+            "duration": "2 jam",
+            "price": 110000,
+            "includes": ["Template habit tracker", "Checklist evaluasi kebiasaan", "Rekaman video"]
+            },
+            {
+            "mode": "Offline",
+            "name": "Habit Building Bootcamp",
+            "duration": "4 jam",
+            "price": 260000,
+            "includes": ["Simulasi habit stacking", "Coaching kelompok", "Tools evaluasi mingguan"]
+            }
+        ]
+        },
+
+        {
+        "key": "goal_setting",
+        "icon": "🎯",
+        "title": "Goal Setting & Perencanaan Karier",
+        "short_desc": "Menentukan tujuan yang jelas dan membuat rencana karier.",
+        "details": "Pelatihan yang membantu peserta menyusun SMART Goals, career planning, dan breakdown actionable steps untuk mencapai tujuan pribadi / profesional.",
+        "programs": [
+            {
+            "mode": "Online",
+            "name": "SMART Goal Masterplan",
+            "duration": "2 jam",
+            "price": 125000,
+            "includes": ["Template rencana 3 bulan", "Worksheet self-evaluation", "Modul PDF"]
+            },
+            {
+            "mode": "Offline",
+            "name": "Career Roadmap Workshop",
+            "duration": "4 jam",
+            "price": 270000,
+            "includes": ["Simulasi career mapping", "Sesi konsultasi mini", "Toolkit perencanaan karier"]
+            }
+        ]
+        }
+
+    ]
+}

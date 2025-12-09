@@ -1,0 +1,65 @@
+{
+    "id": "global_quickpanel",
+    "type": "global",
+    "version": "1.0.0",
+
+    "components": [
+        {
+        "kind": "greeting_card",
+        "title": "Halo! Saya MediSkill AI (Asisten Medis & Produktivitas)",
+        "subtitle": "Saya siap membantu pertanyaan seputar kesehatan, fasilitas medis, biaya layanan, serta pengembangan soft skills & produktivitas.",
+        "icon": "👋"
+        },
+
+        {
+        "kind": "quick_links",
+        "label": "Menu Cepat",
+        "items": [
+            {
+            "label": "Tanya Dokter",
+            "icon": "💬",
+            "action": "intent:ask_doctor"
+            },
+            {
+            "label": "Info Biaya",
+            "icon": "💰",
+            "action": "intent:ask_price"
+            },
+            {
+            "label": "Cek Fasilitas",
+            "icon": "🏥",
+            "action": "intent:ask_facilities"
+            },
+            {
+            "label": "Pelatihan Soft Skills",
+            "icon": "📘",
+            "action": "intent:ask_training"
+            },
+            {
+            "label": "About",
+            "icon": "❓",
+            "action": "intent:ask_help"
+            }
+        ]
+        },
+
+        {
+        "kind": "notice",
+        "text": "Jam konsultasi tenaga medis tersedia 08:00–20:00 setiap hari.",
+        "icon": "⏰",
+        "style": "info"
+        },
+
+        {
+        "kind": "tip_card",
+        "title": "Tip Kesehatan Hari Ini",
+        "icon": "🌿",
+        "tips": [
+            "Minum air putih minimal 6–8 gelas sehari.",
+            "Istirahat selama 5–10 menit setiap 1 jam saat bekerja.",
+            "Coba latihan pernapasan 2 menit untuk menurunkan stres."
+        ],
+        "display_mode": "random"
+        }
+    ]
+}

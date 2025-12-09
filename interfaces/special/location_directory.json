@@ -1,0 +1,166 @@
+{
+    "id": "location_directory",
+    "type": "special",
+    "topic": "location",
+    "version": "1.1.0",
+    "summary_card": {
+        "title": "Direktori Lokasi & Jadwal",
+        "subtitle": "Cabang klinik, jam layanan, dan event/workshop",
+        "icon": "📍"
+    },
+    "columns": ["Cabang", "Kota", "Kecamatan", "Alamat", "Jam Operasi", "Layanan Utama", "Kontak"],
+    "rows": [
+        {
+        "branch": "Klinik A - Menteng",
+        "city": "Jakarta Pusat",
+        "district": "Menteng",
+        "aliases": ["menteng", "kec menteng"],
+        "address": "Jl. Menteng Raya No. 10, Menteng, Jakarta Pusat",
+        "hours": "08:00–18:00 (Mon-Sat)",
+        "services": ["Konsultasi Umum", "Laboratorium", "Workshop Produktivitas"],
+        "contact": "021-555-0101",
+        "distance_estimate_km": null
+        },
+        {
+        "branch": "Klinik D - Cempaka Putih",
+        "city": "Jakarta Pusat",
+        "district": "Cempaka Putih",
+        "aliases": ["cempaka putih", "cempakaputih"],
+        "address": "Jl. Cempaka Putih Tengah No. 8, Jakarta Pusat",
+        "hours": "08:00–17:00 (Mon-Fri)",
+        "services": ["Telemedicine Pickup Point", "Konseling Psikolog"],
+        "contact": "021-666-0202",
+        "distance_estimate_km": null
+        },
+        {
+        "branch": "Klinik B - Kuningan",
+        "city": "Jakarta Selatan",
+        "district": "Kuningan",
+        "aliases": ["kuningan", "kuningan jakarta", "kuningan selatan"],
+        "address": "Jl. Kuningan Persada No. 5, Kuningan, Jakarta Selatan",
+        "hours": "09:00–17:00 (Mon-Fri)",
+        "services": ["Fisioterapi", "Konseling Psikolog", "Workshop Time Management"],
+        "contact": "021-777-0202",
+        "distance_estimate_km": null
+        },
+        {
+        "branch": "Klinik E - Setiabudi",
+        "city": "Jakarta Selatan",
+        "district": "Setiabudi",
+        "aliases": ["setiabudi", "setiabudi jakarta", "setia budi"],
+        "address": "Jl. Setiabudi Tengah No. 12, Setiabudi, Jakarta Selatan",
+        "hours": "08:30–18:00 (Mon-Sat)",
+        "services": ["Konsultasi Spesialis", "Pelatihan Soft Skills"],
+        "contact": "021-888-0303",
+        "distance_estimate_km": null
+        },
+        {
+        "branch": "Klinik F - Kelapa Gading",
+        "city": "Jakarta Utara",
+        "district": "Kelapa Gading",
+        "aliases": ["kelapa gading", "gading"],
+        "address": "Jl. Boulevard Kelapa Gading No. 20, Kelapa Gading, Jakarta Utara",
+        "hours": "08:00–20:00 (Daily)",
+        "services": ["Fisioterapi", "Terapi Wicara"],
+        "contact": "021-999-0404",
+        "distance_estimate_km": null
+        },
+        {
+        "branch": "Klinik G - Tanjung Priok",
+        "city": "Jakarta Utara",
+        "district": "Tanjung Priok",
+        "aliases": ["tanjung priok", "priok"],
+        "address": "Jl. Pelabuhan No. 1, Tanjung Priok, Jakarta Utara",
+        "hours": "08:00–16:00 (Tue-Sat)",
+        "services": ["Laboratorium", "Telemedicine Pickup Point"],
+        "contact": "021-444-0505",
+        "distance_estimate_km": null
+        },
+        {
+        "branch": "Klinik H - Grogol",
+        "city": "Jakarta Barat",
+        "district": "Grogol",
+        "aliases": ["grogol", "grogol petamburan"],
+        "address": "Jl. Grogol Lama No. 3, Grogol, Jakarta Barat",
+        "hours": "09:00–17:00 (Mon-Fri)",
+        "services": ["Psikologi", "Terapi Fisik"],
+        "contact": "021-333-0606",
+        "distance_estimate_km": null
+        },
+        {
+        "branch": "Klinik I - Palmerah",
+        "city": "Jakarta Barat",
+        "district": "Palmerah",
+        "aliases": ["palmerah"],
+        "address": "Jl. Palmerah Barat No. 22, Palmerah, Jakarta Barat",
+        "hours": "08:00–18:00 (Mon-Sat)",
+        "services": ["Konsultasi Umum", "Pelayanan Vaksinasi"],
+        "contact": "021-222-0707",
+        "distance_estimate_km": null
+        },
+        {
+        "branch": "Klinik J - Matraman",
+        "city": "Jakarta Timur",
+        "district": "Matraman",
+        "aliases": ["matraman"],
+        "address": "Jl. Matraman Raya No. 9, Matraman, Jakarta Timur",
+        "hours": "08:00–17:00 (Mon-Fri)",
+        "services": ["Konsultasi Umum", "Laboratorium"],
+        "contact": "021-111-0808",
+        "distance_estimate_km": null
+        },
+        {
+        "branch": "Klinik K - Bandung",
+        "city": "Bandung",
+        "district": "Bandung Wetan",
+        "aliases": ["bandung", "bandung wetan"],
+        "address": "Jl. Asia Afrika 5, Bandung",
+        "hours": "09:00–17:00 (Mon-Fri)",
+        "services": ["Fisioterapi", "Konseling Psikolog", "Workshop"],
+        "contact": "022-777-0202",
+        "distance_estimate_km": null
+        },
+        {
+        "branch": "Klinik L - Surabaya",
+        "city": "Surabaya",
+        "district": "Sawahan",
+        "aliases": ["surabaya", "sawahan"],
+        "address": "Jl. Pemuda 88, Surabaya",
+        "hours": "08:00–16:00 (Tue-Sat)",
+        "services": ["Telemedicine Pickup Point", "Laboratorium"],
+        "contact": "031-333-0303",
+        "distance_estimate_km": null
+        }
+    ],
+    "mini_map": {
+        "enabled": false,
+        "note": "Mini-map disabled in this simple version (no external API).",
+        "map_provider": null
+    },
+    "events": [
+        {
+        "title": "Time Management Essentials",
+        "date": "2025-12-12",
+        "branch": "Klinik B - Kuningan",
+        "description": "Workshop setengah hari fokus pada teknik prioritas & perencanaan kerja bergeser (shift workers).",
+        "registration_action": { "label": "Daftar Sekarang", "action": "register_event_001" }
+        },
+        {
+        "title": "Stress Management for Shift Workers",
+        "date": "2026-01-18",
+        "branch": "Klinik A - Menteng",
+        "description": "Workshop dan sesi praktik singkat untuk menjaga kesejahteraan pekerja shift.",
+        "registration_action": { "label": "Daftar Sekarang", "action": "register_event_002" }
+        }
+    ],
+    "actions": [
+        { "label": "Booking Cabang", "action": "book_branch" },
+        { "label": "Filter by City", "action": "filter_city" },
+        { "label": "Filter by District", "action": "filter_district" }
+    ],
+    "render_options": {
+        "max_rows_preview": 4,
+        "show_more_action": { "label": "Lihat Semua Cabang", "action": "view_all_branches" },
+        "filter_by_district": true
+    }
+}

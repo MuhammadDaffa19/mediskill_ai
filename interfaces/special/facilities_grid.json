@@ -1,0 +1,133 @@
+{
+    "id": "facilities_grid",
+    "type": "special",
+    "topic": "facilities",
+    "version": "1.0.0",
+    "summary_card": {
+        "title": "Fasilitas & Layanan",
+        "subtitle": "Layanan medis, terapi, dan klinik penunjang yang tersedia",
+        "icon": "🏥"
+    },
+    "grid": [
+        {
+        "key": "telemedicine",
+        "title": "Telemedicine",
+        "icon": "📱",
+        "short_desc": "Konsultasi dokter online (umum & spesialis).",
+        "details": "Konsultasi video/chat langsung dengan dokter umum maupun spesialis tanpa perlu datang ke fasilitas kesehatan. Cocok untuk keluhan ringan–sedang, kontrol rutin, baca hasil lab, penyesuaian obat, dan second opinion singkat. Resep elektronik dikirim ke apotek rekanan, serta surat rujukan atau surat keterangan sakit dapat dibuat sesuai indikasi medis.",
+        "availability": "Online 08:00–20:00",
+        "benefits": [
+            "Tanpa antre di fasilitas kesehatan, cukup melalui HP/laptop",
+            "Resep elektronik langsung dikirim ke apotek rekanan",
+            "Bisa digunakan untuk kontrol rutin dan evaluasi pengobatan",
+            "Ringkasan konsultasi tersimpan rapi untuk kunjungan berikutnya"
+        ],
+        "actions": [
+            { "label": "Booking Telemedicine", "action": "book_telemedicine" }
+        ]
+        },
+        {
+        "key": "lab",
+        "title": "Laboratorium",
+        "icon": "🧪",
+        "short_desc": "Tes darah, urine, EKG, dan panel khusus.",
+        "details": "Layanan pemeriksaan laboratorium lengkap untuk skrining kesehatan rutin maupun pemantauan penyakit kronis (diabetes, kolesterol, fungsi ginjal & hati, dan lain-lain). Sampel diambil oleh petugas terlatih di cabang atau lokasi tertentu. Hasil tersedia dalam bentuk digital 24–48 jam, bisa langsung dibaca oleh dokter melalui sistem, dan dapat dikombinasikan dengan paket medical check up.",
+        "availability": "Cabang tertentu, cek jadwal",
+        "benefits": [
+            "Pilihan paket cek kesehatan dasar hingga lanjutan",
+            "Hasil laboratorium digital yang mudah dibagikan ke dokter",
+            "Bisa dikombinasikan dengan konsultasi dokter di hari yang sama",
+            "Standar kualitas laboratorium mengikuti panduan medis terkini"
+        ],
+        "actions": [
+            { "label": "Booking Laboratorium", "action": "book_lab" }
+        ]
+        },
+        {
+        "key": "physio",
+        "title": "Fisioterapi",
+        "icon": "🩺",
+        "short_desc": "Terapi fisik untuk nyeri, cedera, dan rehabilitasi.",
+        "details": "Layanan fisioterapi untuk nyeri leher/punggung, cedera olahraga, pasca operasi, dan masalah gerak lainnya. Sesi diawali dengan asesmen menyeluruh oleh fisioterapis, kemudian disusun program latihan dan terapi manual yang disesuaikan dengan kondisi dan aktivitas harian Anda. Tersedia opsi onsite di klinik dan home visit pada area tertentu.",
+        "availability": "By appointment",
+        "sample_package": {
+            "name": "Paket 5 sesi Fisioterapi",
+            "price": 1250000
+        },
+        "benefits": [
+            "Evaluasi menyeluruh oleh fisioterapis berpengalaman",
+            "Program latihan individual yang mudah diikuti di rumah",
+            "Pendampingan progres dari sesi ke sesi",
+            "Cocok untuk rehabilitasi pasca cedera dan peningkatan fungsi gerak"
+        ],
+        "actions": [
+            { "label": "Booking Fisioterapi", "action": "book_physio" }
+        ]
+        },
+        {
+        "key": "psych",
+        "title": "Konseling Psikolog",
+        "icon": "🧠",
+        "short_desc": "Terapi psikologis & coaching untuk stres, cemas, dan insomnia.",
+        "details": "Sesi konseling privat dengan psikolog untuk menangani stres, kecemasan, overthinking, burnout, masalah relasi, hingga gangguan tidur. Menggunakan pendekatan ilmiah seperti CBT (Cognitive Behavioral Therapy) dan teknik manajemen emosi. Tersedia paket 4 sesi untuk pendampingan berkelanjutan, online maupun tatap muka.",
+        "availability": "Online & Tatap Muka",
+        "sample_package": {
+            "name": "Paket 4 sesi Konseling",
+            "price": 900000
+        },
+        "benefits": [
+            "Ruang cerita aman, empatik, dan rahasia",
+            "Pendekatan berbasis bukti (CBT, coaching produktivitas, dsb.)",
+            "Rencana tindak lanjut yang jelas setelah setiap sesi",
+            "Cocok untuk mahasiswa, pekerja, maupun orang tua yang butuh support"
+        ],
+        "actions": [
+            { "label": "Booking Konseling Psikolog", "action": "book_psych" }
+        ]
+        },
+        {
+        "key": "sleep_clinic",
+        "title": "Klinik Tidur",
+        "icon": "🌙",
+        "short_desc": "Evaluasi gangguan tidur & program sleep hygiene.",
+        "details": "Layanan khusus untuk keluhan sulit tidur, sering terbangun, mengorok berat, atau merasa lelah walau sudah tidur cukup. Dokter dan tim akan menilai pola tidur, faktor gaya hidup, serta kemungkinan gangguan medis terkait (misalnya sleep apnea). Termasuk edukasi sleep hygiene, penyesuaian jadwal tidur, dan rujukan pemeriksaan sleep study bila diperlukan.",
+        "availability": "By appointment",
+        "benefits": [
+            "Screening komprehensif untuk berbagai gangguan tidur",
+            "Program sleep hygiene yang praktis dan realistis",
+            "Pemantauan perbaikan kualitas tidur dari waktu ke waktu",
+            "Rujukan ke sleep study atau spesialis terkait jika dibutuhkan"
+        ],
+        "actions": [
+            { "label": "Booking Klinik Tidur", "action": "book_sleep_eval" }
+        ]
+        },
+        {
+        "key": "nutrition_clinic",
+        "title": "Klinik Gizi & Nutrisi",
+        "icon": "🥗",
+        "short_desc": "Konseling gizi klinis untuk penyakit kronis dan perbaikan pola makan.",
+        "details": "Konsultasi dengan ahli gizi klinis untuk membantu mengatur pola makan pada kondisi seperti obesitas, diabetes, hipertensi, kolesterol tinggi, gangguan lambung, serta kebutuhan nutrisi khusus (misalnya ibu hamil atau pasien pasca operasi). Setiap kunjungan mencakup asesmen status gizi, analisis asupan harian, edukasi pilihan makanan yang lebih sehat, dan rencana makan yang dapat disesuaikan.",
+        "availability": "By appointment",
+        "sample_package": {
+            "name": "Paket Konseling Gizi 3x Sesi",
+            "price": 550000
+        },
+        "benefits": [
+            "Asesmen status gizi dan analisis pola makan yang mendalam",
+            "Rencana makan personal disesuaikan kondisi medis dan gaya hidup",
+            "Edukasi label makanan dan strategi belanja yang lebih sehat",
+            "Monitoring progres dan penyesuaian rencana di setiap sesi lanjutan"
+        ],
+        "actions": [
+            { "label": "Booking Klinik Gizi", "action": "book_nutrition" }
+        ]
+        }
+    ],
+    "render_options": {
+        "layout": "grid",
+        "columns_desktop": 3,
+        "columns_mobile": 1,
+        "show_icons": true
+    }
+}

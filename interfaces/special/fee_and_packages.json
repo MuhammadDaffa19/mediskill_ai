@@ -1,0 +1,77 @@
+{
+    "id": "fee_and_packages",
+    "type": "special",
+    "topic": "pricing",
+    "version": "1.0.0",
+    "summary_card": {
+        "title": "Biaya & Paket",
+        "subtitle": "Ringkasan biaya layanan medis dan paket pemeriksaan",
+        "icon": "💰"
+    },
+    "table": {
+        "columns": ["Layanan", "Biaya (IDR)", "Durasi", "Termasuk"],
+        "rows": [
+            {
+            "service": "Konsultasi Dokter Umum (online)",
+            "price": 150000,
+            "duration": "20 menit",
+            "includes": "Resep elektronik, ringkasan konsultasi",
+            "badge": "Rekomendasi"
+            },
+            {
+            "service": "Konsultasi Spesialis (online)",
+            "price": 300000,
+            "duration": "30 menit",
+            "includes": "Diagnosa awal, rujukan bila perlu"
+            },
+            {
+            "service": "Konsultasi Psikolog (online)",
+            "price": 250000,
+            "duration": "50 menit",
+            "includes": "Sesi terapi, catatan pengembangan personal"
+            },
+            {
+            "service": "Paket Cek Kesehatan Basic",
+            "price": 750000,
+            "duration": "1 hari",
+            "includes": "Panel darah lengkap, urine, EKG"
+            },
+            {
+            "service": "Paket Cek Kesehatan Lanjutan",
+            "price": 1250000,
+            "duration": "1 hari",
+            "includes": "Panel darah lengkap lanjutan, Rontgen dada, konsultasi dokter setelah hasil keluar",
+            "badge": "Best Value"
+            },
+            {
+            "service": "Medical Check Up Karyawan (grup)",
+            "price": 550000,
+            "duration": "Per orang",
+            "includes": [
+                "Pemeriksaan fisik umum",
+                "Tes darah dasar",
+                "Laporan ringkas untuk HR"
+            ],
+            "note": "Minimal 10 peserta, harga per orang"
+            }
+        ]
+    },
+    "highlights": [
+        {
+        "text": "Diskon 10% untuk paket cek kesehatan selama bulan ini (kode: SEHAT10)",
+        "type": "promo"
+        },
+        {
+        "text": "Beberapa asuransi rekanan menerima reimburse — cek menu 'Cek Asuransi'.",
+        "type": "info"
+        }
+    ],
+    "notes": "Harga dapat berubah. Untuk estimasi final, pilih cabang dan tanggal booking.",
+    "actions": [
+        {"label": "Cek Asuransi", "action": "check_insurance"}
+    ],
+    "render_options": {
+        "max_rows_preview": 4,
+        "show_expand_all": true
+    }
+}

@@ -1,0 +1,38 @@
+# =========================
+# Environment & Secrets
+# =========================
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# =========================
+# Python Cache & Logs
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# =========================
+# AI / Database Artifacts
+# =========================
+chroma_db/
+chat_history.json
+
+# =========================
+# OS & Editor Files
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# =========================
+# Vercel (tidak kamu pakai sekarang, tapi aman)
+# =========================
+.vercel
