@@ -4894,6 +4894,27 @@
             return text;
         }
 
+        // ---- SESSION ID HELPER ----
+        function getSessionId() {
+            const KEY = "mediskill_session_id";
+        
+            let id = localStorage.getItem(KEY);
+            if (!id) {
+                // Kalau browser support crypto.randomUUID
+                if (window.crypto && window.crypto.randomUUID) {
+                    id = crypto.randomUUID();
+                } else {
+                    // Fallback simple
+                    id = "sess-" + Date.now() + "-" + Math.random().toString(16).slice(2);
+                }
+                localStorage.setItem(KEY, id);
+            }
+            return id;
+        }
+        
+        // bikin 1 global constant yang dipakai di semua fetch
+        const SESSION_ID = getSessionId();
+
         /* --------------------------
         Switch mode (medis / soft)
         -------------------------- */
@@ -5047,17 +5068,28 @@
         Load chat history (from backend)
         -------------------------- */
         function loadChatHistory() {
-            fetch('/get_history')
+            const url = '/get_history?session_id=' + encodeURIComponent(SESSION_ID);
+        
+            fetch(url)
                 .then(response => response.json())
                 .then(data => {
                     const chatContainer = document.getElementById('chatContainer');
                     const emptyState = document.getElementById('emptyState');
-
+        
+                    // Kalau backend kirim success:false, jangan paksa baca messages
+                    if (!data.success) {
+                        console.error('Failed to load history:', data.error || 'unknown error');
+                        return;
+                    }
+        
                     if (data.messages && data.messages.length > 0) {
                         if (emptyState) emptyState.style.display = 'none';
                         data.messages.forEach(msg => {
-                            if (msg.is_user) appendMessage(msg.q, 'user', msg.timestamp);
-                            else appendMessage(msg.a, 'ai', msg.timestamp);
+                            if (msg.is_user) {
+                                appendMessage(msg.q, 'user', msg.timestamp);
+                            } else {
+                                appendMessage(msg.a, 'ai', msg.timestamp);
+                            }
                         });
                         scrollToBottom();
                     }
@@ -5066,12 +5098,12 @@
                     console.error('Error loading history:', err);
                 })
                 .finally(() => {
-                    // ⬅️ setelah riwayat (jika ada) selesai dimuat,
+                    // setelah riwayat (jika ada) selesai dimuat,
                     // baru kita kembalikan tombol/panel interface
                     restoreSavedInterfaces();
                 });
         }
-
+        
         /* --------------------------
         Append message (quick)
         - Render markdown (bold/italic) safely by escapeHtml -> mdToHtml
@@ -5247,15 +5279,16 @@
             try {
                 const res = await fetch('/send_message', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        message: msg,
+                        message: userMessage,
                         mode: currentMode,
                         topic: currentTopic,
-                        quickpanel_intent: quickpanelIntent   // ✅ KIRIM INTENT DI SINI
+                        quickpanel_intent: currentQuickpanelIntent,
+                        session_id: SESSION_ID
                     })
                 });
-                json = await res.json();
+               json = await res.json();
             } catch (err) {
                 stopLoadingAndShow(bubble, "Terjadi kesalahan jaringan, coba beberapa saat lagi.");
                 input.disabled = false;
@@ -5302,8 +5335,16 @@
         -------------------------- */
         function resetChat() {
             if (!confirm('Apakah Anda yakin ingin mereset percakapan?')) return;
-
-            fetch('/reset', { method: 'POST' })
+        
+            fetch('/reset', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    session_id: SESSION_ID   // 🔥 WAJIB dikirim
+                })
+            })
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
@@ -5313,14 +5354,16 @@
                         } catch (e) {
                             console.warn('Gagal menghapus interfaces dari localStorage:', e);
                         }
-
+        
                         // 🔄 refresh halaman setelah semuanya dibersihkan
                         location.reload();
+                    } else {
+                        showError('Gagal mereset chat: ' + (data.error || 'unknown error'));
                     }
                 })
                 .catch(err => showError('Gagal mereset chat: ' + (err.message || err)));
         }
-
+        
         /* --------------------------
         Clear all data
         -------------------------- */
