@@ -786,12 +786,13 @@ def clear_all():
     """
     Menghapus:
     - folder ./chroma_db (memori dinamis / vektor)
-    
+
     TIDAK menghapus:
     - chat_history.json (riwayat percakapan tetap aman)
 
-    Lalu re-init RAG dengan kb_aurex.json.
-    Jika re-init gagal, rag_chain lama tetap dipakai.
+    Lalu mencoba re-init RAG dengan kb_aurex.json.
+    Jika re-init gagal, rag_chain diset None dan akan dicoba lagi
+    saat ada request /send_message berikutnya.
     """
     try:
         import shutil
@@ -801,18 +802,18 @@ def clear_all():
         if os.path.exists(persist_dir):
             shutil.rmtree(persist_dir)
 
-        # simpan chain lama dulu
-        old_chain = rag_chain
-        new_chain = setup_rag_chain()
+        # ❗ Penting: jangan pakai chain lama lagi, karena DB-nya sudah dihapus
+        rag_chain = None
 
+        # Coba re-init sekarang (opsional)
+        new_chain = setup_rag_chain()
         if new_chain is not None:
             rag_chain = new_chain
             msg = "Dynamic memory cleared successfully and RAG reinitialized."
         else:
-            rag_chain = old_chain
             msg = (
-                "Dynamic memory cleared, tetapi gagal re-inisialisasi RAG baru. "
-                "Sistem masih menggunakan konfigurasi sebelumnya."
+                "Dynamic memory cleared. RAG akan diinisialisasi ulang otomatis "
+                "saat Anda mengirim pesan berikutnya."
             )
             app.logger.warning(msg)
 
@@ -820,7 +821,7 @@ def clear_all():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
-
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
+
