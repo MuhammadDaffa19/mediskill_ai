@@ -555,78 +555,70 @@
             opacity: 0.65;
         }
 
-        /* ===== RESPONSIVE – MOBILE RASA DESKTOP ===== */
+        /* ===== RESPONSIVE – MOBILE RASA DESKTOP LEBIH LEBAR ===== */
         @media (max-width:600px) {
         
-            /* body agak diberi ruang dan background tetap kelihatan */
+            /* sedikit padding saja, biar card hampir full */
             body {
-                padding: 12px;
+                padding: 4px;
             }
         
-            /* kartu utama jadi kayak card desktop kecil di tengah */
+            /* kartu utama hampir selebar layar */
             .container {
-                max-width: 420px;
-                margin: 0 auto;
+                max-width: 100%;
+                width: 100%;
                 height: 95vh;
-                border-radius: 24px;
-                box-shadow: 0 18px 40px rgba(15,23,42,0.35);
-                overflow: hidden;
+                margin: 0 auto;
+                border-radius: 20px;
             }
         
-            /* header lebih rapih */
+            /* HEADER lebih lebar juga */
             .header {
-                padding: 14px 18px;
-                align-items: center;
+                padding: 14px 16px;
             }
-        
             .header-left-text h1 {
                 font-size: 18px;
             }
         
-            /* badge & tombol tidak berdempetan */
-            .header-actions {
-                gap: 8px;
-            }
-        
-            .header-badges {
-                justify-content: flex-end;
-                gap: 4px;
-            }
-        
-            /* top badges & chips */
-            .top-badges-row,
-            .top-badges {
-                padding: 8px 18px 6px;
-                gap: 8px;
-                justify-content: center;
-            }
-        
-            /* section fitur jadi 1 kolom, tapi tetap ada napas di kiri-kanan */
+            /* area fitur di bawah header */
             .feature-sections {
                 grid-template-columns: 1fr;
-                padding: 10px 18px 8px;
+                padding: 10px 16px 8px;
                 gap: 10px;
             }
         
-            /* area chat jadi card lembut di dalam container */
+            /* area chat lebih lebar, padding kiri-kanan dikurangi */
             .chat-wrapper {
-                padding: 10px 16px 0;
+                padding: 10px 12px 0;
             }
         
             .chat-container {
-                border-radius: 18px;
-                padding: 16px 14px;
+                border-radius: 16px;
+                padding: 14px 10px;
                 min-height: 360px;
             }
         
-            .message-content {
+            /* === INI YANG BIKIN BUBBLE LEBIH PENDEK (LEBIH LEBAR) === */
+        
+            /* bubble boleh pakai lebar penuh container */
+            .message {
                 max-width: 100%;
-                font-size: 14px;
             }
         
-            /* input & tombol kirim lebih lega dan tidak mepet tepi */
+            /* kurangi offset avatar supaya bubble AI makin lebar */
+            .message.ai {
+                padding-left: 36px;
+            }
+        
+            .message .message-content {
+                max-width: 100%;
+                font-size: 13.5px;
+                padding: 12px 14px 16px;
+            }
+        
+            /* INPUT bawah tetap nyaman */
             .input-container {
-                padding: 10px 16px 14px;
+                padding: 10px 12px 14px;
             }
         
             .input-form {
@@ -645,7 +637,7 @@
                 border-radius: 999px;
             }
         }
-        
+
         /* ==========================
         Interface Components CSS
         (Append this after your existing styles)
