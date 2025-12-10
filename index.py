@@ -567,6 +567,9 @@ def send_message():
     }
     """
     try:
+        # 🔥 supaya kita bisa re-init rag_chain
+        global rag_chain
+
         data = request.get_json()
         user_message = data.get("message", "").strip()
         mode = data.get("mode", "medis")           # default: medis
@@ -583,7 +586,13 @@ def send_message():
         if not os.getenv("OPENAI_API_KEY"):
             return jsonify({"error": "OpenAI API key is not set!"}), 500
 
-        # 🔥 sekarang history tergantung session_id
+        # 🔥 kalau rag_chain tiba-tiba None (misal gagal init sebelumnya),
+        # coba re-init lagi dulu
+        if rag_chain is None:
+            app.logger.warning("rag_chain is None, trying to reinitialize...")
+            rag_chain = setup_rag_chain()
+
+        # history sekarang tergantung session_id
         messages = load_chat_history(session_id)
 
         # ======================================================
@@ -638,7 +647,7 @@ def send_message():
                     "Silakan tuliskan kebutuhan Anda sekarang, saya bantu arahkan 😊"
                 )
 
-            # Simpan history seperti biasa
+            # Simpan history seperti biasa (PER SESSION)
             timestamp = datetime.now().isoformat()
             new_messages = [
                 {"is_user": True, "q": user_message, "timestamp": timestamp},
@@ -670,7 +679,7 @@ def send_message():
         # ✅ 2. JIKA BUKAN QUICKPANEL → LANJUT KE RAG SEPERTI BIASA
         # ======================================================
         if rag_chain:
-            # Ambil 20 pesan terakhir
+            # Ambil 20 pesan terakhir utk session ini
             recent_messages = messages[-20:]
             chat_history = []
             for msg in recent_messages:
@@ -692,9 +701,13 @@ def send_message():
             # Simpan percakapan ke vectorstore dinamis
             add_to_vectorstore(user_message, answer)
         else:
-            answer = "Maaf, sistem MediSkill AI sedang tidak dapat diinisialisasi."
+            # Kalau setelah dicoba re-init tetap None
+            answer = (
+                "Maaf, sistem MediSkill AI sedang tidak dapat diinisialisasi. "
+                "Silakan coba beberapa saat lagi atau hubungi admin."
+            )
 
-        # Simpan history ke file
+        # Simpan history ke file (PER SESSION)
         timestamp = datetime.now().isoformat()
         new_messages = [
             {"is_user": True, "q": user_message, "timestamp": timestamp},
@@ -778,20 +791,32 @@ def clear_all():
     - chat_history.json (riwayat percakapan tetap aman)
 
     Lalu re-init RAG dengan kb_aurex.json.
+    Jika re-init gagal, rag_chain lama tetap dipakai.
     """
     try:
         import shutil
+        global rag_chain
 
-        # ✅ Sekarang: hanya hapus memori dinamis (chroma_db)
         persist_dir = "./chroma_db"
         if os.path.exists(persist_dir):
             shutil.rmtree(persist_dir)
 
-        # re-init RAG chain
-        global rag_chain
-        rag_chain = setup_rag_chain()
+        # simpan chain lama dulu
+        old_chain = rag_chain
+        new_chain = setup_rag_chain()
 
-        return jsonify({"success": True, "message": "Dynamic memory cleared successfully (chat history preserved)."})
+        if new_chain is not None:
+            rag_chain = new_chain
+            msg = "Dynamic memory cleared successfully and RAG reinitialized."
+        else:
+            rag_chain = old_chain
+            msg = (
+                "Dynamic memory cleared, tetapi gagal re-inisialisasi RAG baru. "
+                "Sistem masih menggunakan konfigurasi sebelumnya."
+            )
+            app.logger.warning(msg)
+
+        return jsonify({"success": True, "message": msg})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
