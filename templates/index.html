@@ -5264,66 +5264,78 @@
         async function sendMessageFlow(msg, quickpanelIntent = null) {
             const input = document.getElementById('messageInput');
             const sendBtn = document.getElementById('sendBtn');
-
+        
+            // Tampilkan pesan user di UI
             appendMessage(msg, 'user');
             input.disabled = true;
             sendBtn.disabled = true;
             input.value = '';
+        
             const emptyStateEl = document.getElementById('emptyState');
             if (emptyStateEl) emptyStateEl.style.display = 'none';
-
+        
             const bubble = createAIBubble();
             startLoading(bubble);
-
-            let json;
+        
             try {
                 const res = await fetch('/send_message', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        message: userMessage,
-                        mode: currentMode,
-                        topic: currentTopic,
-                        quickpanel_intent: currentQuickpanelIntent,
-                        session_id: SESSION_ID
+                        message: msg,                  // ✅ pakai parameter msg
+                        mode: currentMode,             // pastikan variabel global ini sudah ada
+                        topic: currentTopic || "",     // boleh kosong
+                        quickpanel_intent: quickpanelIntent, // ✅ pakai parameter
+                        session_id: SESSION_ID         // ✅ per-user session
                     })
                 });
-               json = await res.json();
+        
+                let json;
+                try {
+                    json = await res.json();
+                } catch (e) {
+                    throw new Error('Response server tidak valid');
+                }
+        
+                // Kalau status HTTP bukan 2xx atau backend kirim error
+                if (!res.ok || json.error) {
+                    const errMsg =
+                        (json && (json.error || json.message)) ||
+                        `Terjadi kesalahan di server (kode ${res.status})`;
+                    stopLoadingAndShow(bubble, errMsg);
+                    input.disabled = false;
+                    sendBtn.disabled = false;
+                    return;
+                }
+        
+                const answer = json.response || json.a || "Maaf, saya belum bisa menjawab sekarang.";
+        
+                // tampilkan jawaban AI
+                stopLoadingAndShow(bubble, answer);
+        
+                // === render interfaces kalau ada ===
+                try {
+                    const interfaces = json.interfaces || [];
+                    if (interfaces && interfaces.length) {
+                        renderInterfaces(interfaces, bubble);
+                        saveInterfacesForReload(interfaces);
+                    }
+                } catch (err) {
+                    console.warn('Failed to render interfaces:', err);
+                }
+        
+                input.disabled = false;
+                sendBtn.disabled = false;
+                input.focus();
+        
             } catch (err) {
+                console.error('sendMessageFlow error:', err);
                 stopLoadingAndShow(bubble, "Terjadi kesalahan jaringan, coba beberapa saat lagi.");
                 input.disabled = false;
                 sendBtn.disabled = false;
-                return;
             }
-
-            if (json.error) {
-                stopLoadingAndShow(bubble, json.error || 'Terjadi kesalahan.');
-                input.disabled = false;
-                sendBtn.disabled = false;
-                return;
-            }
-
-            const answer = json.response || json.a || "Maaf, saya belum bisa menjawab sekarang.";
-
-            // show full answer instantly (escaped + markdown -> html)
-            stopLoadingAndShow(bubble, answer);
-
-            // --- NEW: render interfaces (if provided) right after the AI bubble ---
-            // --- NEW: render interfaces (if provided) right after the AI bubble ---
-            try {
-                const interfaces = json.interfaces || [];
-                if (interfaces && interfaces.length) {
-                    renderInterfaces(interfaces, bubble);
-                    saveInterfacesForReload(interfaces);   // ⬅️ simpan untuk reload
-                } else {
-                    // kalau jawaban berikutnya tidak bawa interface,
-                    // kita tidak perlu menghapus yang lama dari storage
-                    // (biar panel pintas tetap ada)
-                }
-            } catch (err) {
-                console.warn('Failed to render interfaces:', err);
-            }
-            // --- end new ---
+        }
+           // --- end new ---
 
             input.disabled = false;
             sendBtn.disabled = false;
