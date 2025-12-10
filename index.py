@@ -158,6 +158,9 @@ def add_to_vectorstore(user_message, ai_response):
 def setup_rag_chain():
     """
     Inisialisasi ChromaDB + Conversational RAG Chain menggunakan kb_aurex.json.
+    Lebih tahan banting:
+    - Coba Chroma persistent (./chroma_db)
+    - Kalau gagal, fallback ke Chroma in-memory (tanpa persist_directory)
     """
     api_key = os.getenv('OPENAI_API_KEY')
     if not api_key:
@@ -175,33 +178,62 @@ def setup_rag_chain():
         embeddings = OpenAIEmbeddings(api_key=api_key)
         persist_dir = "./chroma_db"
 
-        # 2. Cek apakah DB Chroma sudah ada
-        if os.path.exists(persist_dir):
-            print(">>> Loading existing ChromaDB Vector Store...")
-            vectorstore = Chroma(
-                persist_directory=persist_dir,
-                embedding_function=embeddings
-            )
-        else:
-            if not kb_texts:
-                print("ERROR: Tidak ada data KB untuk inisialisasi ChromaDB baru.")
-                return None
+        # ====== 2. Bangun VECTORSTORE (persistent → in-memory fallback) ======
+        vectorstore = None
 
-            print(">>> Creating new ChromaDB Vector Store from kb_aurex.json...")
-            metadatas = []
-            for item in kb_items:
-                metadatas.append({
-                    "kb_id": item.get("id"),
-                    "kb_type": item.get("type", "unknown"),
-                    "source": "kb_aurex"
-                })
+        try:
+            if os.path.exists(persist_dir):
+                print(">>> Loading existing ChromaDB Vector Store...")
+                vectorstore = Chroma(
+                    persist_directory=persist_dir,
+                    embedding_function=embeddings
+                )
+            else:
+                if not kb_texts:
+                    print("ERROR: Tidak ada data KB untuk inisialisasi ChromaDB baru.")
+                    vectorstore = None
+                else:
+                    print(">>> Creating new ChromaDB Vector Store from kb_aurex.json...")
+                    metadatas = []
+                    for item in kb_items:
+                        metadatas.append({
+                            "kb_id": item.get("id"),
+                            "kb_type": item.get("type", "unknown"),
+                            "source": "kb_aurex"
+                        })
 
-            vectorstore = Chroma.from_texts(
-                texts=kb_texts,
-                embedding=embeddings,
-                metadatas=metadatas,
-                persist_directory=persist_dir
-            )
+                    vectorstore = Chroma.from_texts(
+                        texts=kb_texts,
+                        embedding=embeddings,
+                        metadatas=metadatas,
+                        persist_directory=persist_dir
+                    )
+        except Exception as e:
+            # Kalau persistent Chroma error (misal "unable to open database file"),
+            # kita fallback ke Chroma in-memory supaya RAG tetap jalan.
+            print(f"[RAG] Gagal inisialisasi Chroma persistent: {e}")
+            if kb_texts:
+                print("[RAG] Fallback ke Chroma in-memory (tanpa persist_directory).")
+                metadatas = []
+                for item in kb_items:
+                    metadatas.append({
+                        "kb_id": item.get("id"),
+                        "kb_type": item.get("type", "unknown"),
+                        "source": "kb_aurex"
+                    })
+
+                vectorstore = Chroma.from_texts(
+                    texts=kb_texts,
+                    embedding=embeddings,
+                    metadatas=metadatas
+                )
+            else:
+                print("[RAG] Tidak ada KB & Chroma persistent gagal → vectorstore = None")
+                vectorstore = None
+
+        if vectorstore is None:
+            print("ERROR: vectorstore tidak berhasil dibuat, rag_chain = None")
+            return None
 
         retriever = vectorstore.as_retriever(search_kwargs={"k": 6})
 
@@ -505,16 +537,14 @@ def setup_rag_chain():
         ])
 
         question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
-
-        rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
+        rag_chain_local = create_retrieval_chain(history_aware_retriever, question_answer_chain)
 
         print(">>> ChromaDB & Conversational RAG Initialized Successfully (MediSkill AI)")
-        return rag_chain
+        return rag_chain_local
 
     except Exception as e:
         print(f"Error initializing RAG: {e}")
         return None
-
 
 # Initialize global RAG chain
 rag_chain = setup_rag_chain()
@@ -824,4 +854,5 @@ def clear_all():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
+
 
