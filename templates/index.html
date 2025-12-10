@@ -5282,11 +5282,11 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        message: msg,                  // ✅ pakai parameter msg
-                        mode: currentMode,             // pastikan variabel global ini sudah ada
-                        topic: currentTopic || "",     // boleh kosong
-                        quickpanel_intent: quickpanelIntent, // ✅ pakai parameter
-                        session_id: SESSION_ID         // ✅ per-user session
+                        message: msg,                  // pakai msg
+                        mode: currentMode,
+                        topic: currentTopic || '',
+                        quickpanel_intent: quickpanelIntent,
+                        session_id: SESSION_ID
                     })
                 });
         
@@ -5297,7 +5297,6 @@
                     throw new Error('Response server tidak valid');
                 }
         
-                // Kalau status HTTP bukan 2xx atau backend kirim error
                 if (!res.ok || json.error) {
                     const errMsg =
                         (json && (json.error || json.message)) ||
@@ -5334,12 +5333,6 @@
                 input.disabled = false;
                 sendBtn.disabled = false;
             }
-        }
-           // --- end new ---
-
-            input.disabled = false;
-            sendBtn.disabled = false;
-            input.focus();
         }
 
         /* --------------------------
