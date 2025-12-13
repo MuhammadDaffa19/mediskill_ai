@@ -4965,23 +4965,20 @@
         }
 
             /* =====================================================
-               MOBILE – ULTRA SAFE FINAL
-               (NO CUT • NO OVERFLOW • NO STRESS)
+               MOBILE – CLEAN & PROFESSIONAL (FINAL)
                ===================================================== */
             @media (max-width: 768px) {
             
               /* =====================
-                 GLOBAL (AMAN MOBILE)
+                 GLOBAL (JANGAN DI-LOCK)
                  ===================== */
               * {
                 box-sizing: border-box;
               }
             
               html, body {
-                height: 100%;
                 margin: 0;
                 padding: 0;
-                overflow: hidden;
               }
             
               body {
@@ -4990,47 +4987,47 @@
               }
             
               /* =====================
-                 APP CONTAINER (CARD STYLE)
+                 APP SHELL
                  ===================== */
               .container {
                 max-width: 420px;
-                height: 96dvh;                 /* 🔑 aman address bar */
-                margin: auto;
+                height: 96vh;                 /* KEMBALI KE YANG STABIL */
+                margin: 14px auto;
                 display: flex;
                 flex-direction: column;
-                border-radius: 22px;
-                overflow: hidden;
-                box-shadow: 0 16px 40px rgba(0,0,0,0.25);
                 background: #ffffff;
+                border-radius: 24px;
+                overflow: hidden;
+                box-shadow: 0 18px 45px rgba(0,0,0,0.25);
               }
             
               /* =====================
-                 HEADER (DIPADATKAN)
+                 HEADER (RAPI & LEGA)
                  ===================== */
               .header {
-                flex-shrink: 0;
-                padding: 12px 14px 10px;
-                gap: 6px;
+                padding: 16px;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
               }
             
               .header h1 {
-                font-size: 16.5px;
-                line-height: 1.25;
+                font-size: 18px;
+                line-height: 1.3;
                 margin: 0;
               }
             
               .header p {
-                font-size: 12px;
+                font-size: 13px;
                 margin: 0;
               }
             
-              /* tombol header (scroll horizontal aman) */
+              /* tombol header */
               .header-actions {
                 display: flex;
-                gap: 6px;
+                gap: 10px;
                 overflow-x: auto;
                 scrollbar-width: none;
-                -webkit-overflow-scrolling: touch;
               }
             
               .header-actions::-webkit-scrollbar {
@@ -5038,95 +5035,84 @@
               }
             
               .header-actions button {
-                flex-shrink: 0;
-                padding: 6px 10px;
-                font-size: 11px;
+                padding: 8px 14px;
+                font-size: 13px;
                 border-radius: 999px;
                 white-space: nowrap;
               }
             
-              /* badge kecil */
+              /* badge */
               .header-badges {
                 display: flex;
                 flex-wrap: wrap;
-                gap: 4px;
-              }
-            
-              .header-badges .badge-pill {
-                font-size: 10px;
-                padding: 2px 6px;
-                border-radius: 999px;
+                gap: 8px;
               }
             
               /* =====================
                  TAB
                  ===================== */
               .tabs {
-                flex-shrink: 0;
-                padding: 8px 10px;
-                gap: 10px;
+                padding: 12px 16px;
+                display: flex;
+                gap: 12px;
               }
             
               .tab {
-                padding: 9px 14px;
-                font-size: 13px;
-                border-radius: 12px;
+                padding: 12px 18px;
+                font-size: 14px;
+                border-radius: 14px;
               }
             
               /* =====================
-                 CHAT AREA (PRIORITAS UTAMA)
+                 CHAT (FLEX-GROW BENAR)
                  ===================== */
               .chat-wrapper {
                 flex: 1;
                 display: flex;
                 flex-direction: column;
-                padding: 10px;
-                min-height: 0;
+                padding: 12px 16px;
                 overflow: hidden;
               }
             
               .chat-container {
                 flex: 1;
-                min-height: 0;
                 overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
-                padding: 14px;
-                border-radius: 16px;
+                padding: 16px;
+                border-radius: 18px;
                 background: #f9fafb;
               }
             
               .chat-container h2 {
-                font-size: 15.5px;
+                font-size: 16px;
               }
             
               .chat-container p {
-                font-size: 13px;
+                font-size: 14px;
               }
             
               /* =====================
-                 INPUT AREA (SELALU TERLIHAT)
+                 INPUT (TOUCH FRIENDLY)
                  ===================== */
               .input-area {
-                flex-shrink: 0;
-                padding: 10px;
-                padding-bottom: calc(10px + env(safe-area-inset-bottom));
+                padding: 14px 16px;
                 background: #ffffff;
+                border-top: 1px solid rgba(0,0,0,0.06);
               }
             
               .input-area input {
-                height: 40px;
-                font-size: 13px;
-                border-radius: 12px;
+                height: 46px;
+                font-size: 14px;
+                border-radius: 14px;
               }
             
               .input-area button {
-                height: 40px;
-                font-size: 13px;
-                border-radius: 12px;
+                height: 46px;
+                font-size: 14px;
+                border-radius: 14px;
               }
             
               /* =================================================
-                 ONBOARDING / PANDUAN (TIDAK MERUSAK LAYOUT)
+                 ONBOARDING (ISOLATED)
                  ================================================= */
               body.ms-onboard-open {
                 overflow: hidden;
@@ -5140,67 +5126,35 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                padding: 12px;
+                padding: 14px;
               }
             
               .ms-card {
-                width: 100%;
                 max-width: 420px;
-                height: 96dvh;               /* 🔑 sama dengan container */
+                height: 96vh;
+                background: #ffffff;
+                border-radius: 24px;
                 display: flex;
                 flex-direction: column;
-                border-radius: 22px;
                 overflow: hidden;
-                background: #ffffff;
                 box-shadow: 0 18px 45px rgba(0,0,0,0.35);
               }
             
               .ms-left {
-                flex-shrink: 0;
-                padding: 14px;
-              }
-            
-              .ms-left-desc {
-                font-size: 12px;
-                line-height: 1.45;
-                padding: 8px 10px;
+                padding: 16px;
               }
             
               .ms-right {
                 flex: 1;
+                padding: 16px;
+                overflow: hidden;
                 display: flex;
                 flex-direction: column;
-                padding: 12px;
-                min-height: 0;
-                overflow: hidden;
               }
             
-              /* HANYA BAGIAN INI YANG BOLEH SCROLL */
               .ms-slides {
                 flex: 1;
-                min-height: 0;
                 overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
-              }
-            
-              .ms-slide-title {
-                font-size: 14px;
-              }
-            
-              .ms-slide-desc {
-                font-size: 13px;
-                line-height: 1.5;
-              }
-            
-              .ms-controls,
-              .ms-footer {
-                flex-shrink: 0;
-              }
-            
-              .ms-controls .ms-btn {
-                height: 40px;
-                font-size: 13px;
-                border-radius: 12px;
               }
             }
     </style>
