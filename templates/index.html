@@ -5,6 +5,266 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>MediSkill AI Assistant</title>
     <style>
+        :root{
+        --bg:#e9eef6;
+        --panel:#eef4fb;
+        --neu-light:#ffffff;
+        --brand1:#0ea5e9;
+        --brand2:#6366f1;
+        --muted:#566274;
+        --text:#0f172a;
+        }
+
+        /* Overlay / card */
+        .ms-overlay {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(4,8,20,0.35);
+        z-index: 99999;
+        padding: 20px;
+        }
+
+        .ms-card {
+        width: min(960px,100%);
+        max-width: 960px;
+        border-radius: 18px;
+        background: var(--panel);
+        display: flex;
+        overflow: hidden;
+        box-shadow: 8px 8px 18px rgba(168,179,196,0.35), -8px -8px 18px rgba(255,255,255,0.8);
+        height: 520px;
+        box-sizing: border-box;
+        }
+
+        /* LEFT panel: avatar + description */
+        .ms-left {
+        width: 40%;
+        min-width: 300px;
+        padding: 28px 26px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        gap: 14px;
+        background: linear-gradient(135deg, var(--brand1), var(--brand2));
+        color: white;
+        position: relative;
+        box-sizing: border-box;
+        }
+
+        /* Avatar container — perfect circle, no gap */
+        .ms-ai-photo {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;                   /* ensure no internal spacing */
+        background: transparent;
+        box-shadow: 0 8px 18px rgba(0,0,0,0.16);
+        border: 6px solid rgba(255,255,255,0.08); /* subtle ring */
+        box-sizing: border-box;
+        flex-shrink: 0;
+        }
+
+        /* <img> must fully fill the circle without gaps */
+        .ms-ai-photo img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        }
+
+        /* Left description card — readable, wrapped, and scrollable if long */
+        .ms-left-desc {
+        color: rgba(255,255,255,0.95);
+        font-size: 13px;
+        line-height: 1.5;
+        max-width: 240px;         /* line-length comfortable */
+        text-align: center;
+        padding: 12px 14px;
+        background: rgba(255,255,255,0.06);
+        border-radius: 12px;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+        word-wrap: break-word;
+        max-height: 220px;        /* prevent left panel growing too tall */
+        overflow-y: auto;         /* allow internal scroll for long text */
+        -webkit-overflow-scrolling: touch;
+        box-sizing: border-box;
+        }
+
+        /* subtle fade-in helper for left description */
+        .ms-left-desc.fade-in { opacity: 0; transform: translateY(6px); transition: opacity .36s ease, transform .36s ease; }
+        .ms-left-desc.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* RIGHT panel: slides + fixed controls/footer */
+        .ms-right {
+        flex: 1;
+        padding: 18px 22px;
+        display: flex;
+        flex-direction: column;
+        min-width: 360px;
+        height: 100%;
+        box-sizing: border-box;
+        }
+
+        /* wrapper controlling internal scroll and sticky controls */
+        .ms-slides-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex: 1 1 auto;
+        min-height: 0; /* important for correct overflow inside flex */
+        }
+
+        /* internal scroll area for slides */
+        .ms-slides {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        padding: 6px 6px 12px 6px;
+        box-sizing: border-box;
+        -webkit-overflow-scrolling: touch;
+        }
+
+        /* --- Fix: header layout + close button positioning --- */
+        .ms-header {
+        display: flex;
+        align-items: flex-start;      /* top align sehingga tombol di pojok atas */
+        justify-content: space-between;
+        gap: 12px;
+        padding: 6px 0 12px 0;
+        box-sizing: border-box;
+        }
+
+        /* style untuk teks header (jaga jarak kiri) */
+        .ms-header > div {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        }
+
+        /* Make close button compact, consistently aligned at top-right */
+        .ms-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 36px;
+        min-height: 36px;
+        padding: 6px 10px;
+        border-radius: 10px;
+        background: var(--panel);
+        color: var(--text);
+        font-weight: 700;
+        box-shadow: 6px 6px 12px rgba(168,179,196,0.28), -6px -6px 12px rgba(255,255,255,0.9);
+        border: none;
+        cursor: pointer;
+        margin-left: 12px;            /* dorong ke kanan */
+        flex-shrink: 0;
+        }
+
+        /* Jika layout jadi rapat di layar kecil, pastikan tombol tetap di baris yang sama */
+        @media (max-width:880px){
+        .ms-header { align-items: center; padding-bottom:8px; }
+        .ms-close { min-width: 34px; min-height: 34px; padding:6px 8px; }
+        }
+
+        /* --- Fix: left paragraph readability --- */
+        .ms-left-desc {
+        color: rgba(255,255,255,0.96);
+        font-size: 14px;
+        line-height: 1.55;          /* baca lebih nyaman */
+        text-align: center;         /* tetap gaya sebelumnya */
+        
+        /* spacing */
+        padding: 14px 16px;
+        margin-top: 12px;
+
+        /* batas lebar agar paragraf tidak terlalu panjang */
+        max-width: 250px;
+
+        /* hilangkan scroll sepenuhnya */
+        max-height: none;
+        overflow: visible;
+
+        /* tampilan kotak */
+        background: rgba(255,255,255,0.06);
+        border-radius: 12px;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+
+        word-break: break-word;
+        white-space: normal;         /* pastikan text wrap normal */
+        }
+
+        /* Jika ingin teks lebih ke kiri pada layar sangat lebar, tambahkan sedikit padding lateral */
+        @media (min-width: 1100px) {
+        .ms-left-desc { max-width: 300px; }
+        }
+
+        /* mobile tweak: jangan kebesaran */
+        @media (max-width:420px){
+        .ms-left-desc { font-size:13px; max-width: 90%; padding:10px; line-height:1.5; }
+        }
+
+        /* Slide styles */
+        .ms-slide { display: none; padding: 6px; box-sizing: border-box; }
+        .ms-slide.active { display: block; }
+        .ms-slide-content { display:flex; flex-direction:column; justify-content:center; gap:10px; min-height:260px; box-sizing:border-box; }
+        .ms-slide-inner { display:flex; flex-direction:column; gap:10px; padding-right:6px; max-height: calc(100%); overflow:auto; box-sizing:border-box; }
+        .ms-emoji { font-size:34px; }
+        .ms-slide-title { font-size:16px; font-weight:700; color:var(--text); margin-bottom:6px; }
+        .ms-slide-desc { color:var(--muted); line-height:1.6; margin-bottom:12px; white-space: normal; word-break: break-word; }
+
+        /* lists inside description */
+        .ms-slide-desc ul { margin:8px 0 0 18px; padding-left: 0; line-height:1.45; }
+
+        /* feature grid under some slides */
+        .ms-feature-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; margin-top:8px; box-sizing:border-box; }
+        .ms-feature { background:var(--neu-light); border-radius:12px; padding:10px; display:flex; gap:8px; align-items:center; box-shadow:6px 6px 12px rgba(168,179,196,0.35), -6px -6px 12px rgba(255,255,255,0.9); }
+        .ms-feature .icon { width:44px; height:44px; border-radius:10px; display:grid; place-items:center; background:linear-gradient(135deg,var(--brand1),var(--brand2)); color:white; font-weight:700; }
+
+        /* Controls and footer always visible (outside scroll area) */
+        .ms-controls { display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:8px; flex: none; box-sizing:border-box; }
+        .ms-footer { display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:6px; flex:none; box-sizing:border-box; }
+
+        /* dot indicators */
+        .ms-dots { display:flex; gap:8px; align-items:center; }
+        .ms-dot { width:10px; height:10px; border-radius:50%; background:var(--neu-light); box-shadow: inset 3px 3px 6px rgba(168,179,196,0.4), inset -3px -3px 6px rgba(255,255,255,0.9); opacity:0.6; }
+        .ms-dot.active { background:linear-gradient(135deg,var(--brand1),var(--brand2)); opacity:1; }
+
+        /* Buttons */
+        .ms-btn { padding:8px 12px; border-radius:12px; border:none; font-weight:700; cursor:pointer; }
+        .ms-btn.ghost { background:var(--panel); box-shadow:6px 6px 12px rgba(168,179,196,0.28), -6px -6px 12px rgba(255,255,255,0.9); color:var(--text); }
+        .ms-btn.primary { background:linear-gradient(135deg,var(--brand1),var(--brand2)); color:white; box-shadow:0 8px 20px rgba(99,102,241,0.08); }
+
+        .ms-never { display:flex; align-items:center; gap:8px; color:var(--muted); font-size:13px; }
+        .ms-close { background:var(--panel); border-radius:10px; padding:8px 10px; border:none; box-shadow:6px 6px 12px rgba(168,179,196,0.28), -6px -6px 12px rgba(255,255,255,0.9); cursor:pointer; }
+
+        /* small responsive tweaks */
+        @media (max-width:880px){
+        .ms-card { flex-direction: column; width:100%; height:100vh; border-radius:12px; }
+        .ms-left { width:100%; min-height:160px; padding:18px; }
+        .ms-left-desc { max-width: 90%; font-size:13px; max-height:140px; }
+        .ms-ai-photo { width:96px; height:96px; }
+        .ms-feature-grid { grid-template-columns: repeat(auto-fit, minmax(120px,1fr)); }
+        }
+        @media (max-width:420px){
+        .ms-emoji { font-size:28px; }
+        .ms-slide-title { font-size:15px; }
+        }
+
+        /* ensure box-sizing */
+        * { box-sizing: border-box; }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         /* ===== GLOBAL / BACKGROUND ===== */
@@ -4705,92 +4965,93 @@
         }
 
         /* =========================
-       MOBILE DIPERCANTIK (RASA DESKTOP)
-       ========================= */
-    @media (max-width: 768px) {
-    
-      body {
-        padding: 14px;
-        background: linear-gradient(135deg, #4facfe, #00f2fe);
-      }
-    
-      .container {
-        max-width: 420px;      /* kunci utama: biar tidak melebar */
-        margin: auto;
-        height: 96vh;
-        border-radius: 24px;
-        box-shadow: 0 18px 45px rgba(0,0,0,0.25);
-        overflow: hidden;
-      }
-    
-      /* HEADER */
-      .header {
-        padding: 20px;
-        gap: 16px;
-      }
-    
-      .header h1 {
-        font-size: 20px;
-        line-height: 1.3;
-      }
-    
-      .header-buttons {
-        gap: 12px;
-      }
-    
-      /* BADGE (Evidence, Privacy, dll) */
-      .header .badge {
-        margin-top: 10px;
-        gap: 10px;
-      }
-    
-      /* TAB Medis & Produktivitas */
-      .tabs {
-        padding: 14px;
-        gap: 14px;
-      }
-    
-      .tab {
-        padding: 14px 18px;
-        border-radius: 14px;
-        font-size: 14px;
-      }
-    
-      /* AREA CHAT */
-      .chat-area {
-        padding: 18px;
-        gap: 14px;
-      }
-    
-      .chat-box {
-        border-radius: 20px;
-        padding: 22px;
-        font-size: 14.5px;
-      }
-    
-      /* INPUT AREA */
-      .input-area {
-        padding: 14px;
-        gap: 12px;
-      }
-    
-      .input-area input {
-        height: 46px;
-        border-radius: 14px;
-        font-size: 14px;
-        padding: 0 14px;
-      }
-    
-      .input-area button {
-        height: 46px;
-        border-radius: 14px;
-        padding: 0 20px;
-        font-size: 14px;
-      }
-    }
+        MOBILE DIPERCANTIK (RASA DESKTOP)
+        ========================= */
+        @media (max-width: 768px) {
+        
+        body {
+            padding: 14px;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+        }
+        
+        .container {
+            max-width: 420px;      /* kunci utama: biar tidak melebar */
+            margin: auto;
+            height: 96vh;
+            border-radius: 24px;
+            box-shadow: 0 18px 45px rgba(0,0,0,0.25);
+            overflow: hidden;
+        }
+        
+        /* HEADER */
+        .header {
+            padding: 20px;
+            gap: 16px;
+        }
+        
+        .header h1 {
+            font-size: 20px;
+            line-height: 1.3;
+        }
+        
+        .header-buttons {
+            gap: 12px;
+        }
+        
+        /* BADGE (Evidence, Privacy, dll) */
+        .header .badge {
+            margin-top: 10px;
+            gap: 10px;
+        }
+        
+        /* TAB Medis & Produktivitas */
+        .tabs {
+            padding: 14px;
+            gap: 14px;
+        }
+        
+        .tab {
+            padding: 14px 18px;
+            border-radius: 14px;
+            font-size: 14px;
+        }
+        
+        /* AREA CHAT */
+        .chat-area {
+            padding: 18px;
+            gap: 14px;
+        }
+        
+        .chat-box {
+            border-radius: 20px;
+            padding: 22px;
+            font-size: 14.5px;
+        }
+        
+        /* INPUT AREA */
+        .input-area {
+            padding: 14px;
+            gap: 12px;
+        }
+        
+        .input-area input {
+            height: 46px;
+            border-radius: 14px;
+            font-size: 14px;
+            padding: 0 14px;
+        }
+        
+        .input-area button {
+            height: 46px;
+            border-radius: 14px;
+            padding: 0 20px;
+            font-size: 14px;
+        }
+        }
     </style>
 </head>
 <body>
+    <div id="ms-onboard-root"></div>
     <!-- CARD -->
     <div class="container">
         <!-- HEADER -->
@@ -4982,6 +5243,600 @@
     </div>
 
     <script>
+        /* ============================================================
+        FINAL MEDISKILL AI – ONBOARDING SCRIPT (STABLE SINGLE FILE)
+        - Auto-show on first visit
+        - No reload loop / no flicker
+        - Header Panduan injection (copy style when possible)
+        - Floating trigger only if header lacks Panduan
+        ============================================================ */
+        (function () {
+            const KEY = "ms_onboard_v1";
+            const FLOAT_ID = "ms-onboard-trigger";
+            const HEADER_BTN_ID = "ms-onboard-header-btn";
+
+            /* ------------------ utility: find header container ------------------ */
+            function findHeaderContainer() {
+                return document.querySelector(".header .header-actions")
+                    || document.querySelector(".header-actions")
+                    || document.querySelector("header")
+                    || document.querySelector(".topbar")
+                    || document.querySelector(".app-header")
+                    || document.querySelector(".controls")
+                    || document.querySelector(".navbar .actions")
+                    || document.body;
+            }
+
+            /* ------------------ header Panduan detection ------------------ */
+            function headerHasPanduanEl() {
+                const header = findHeaderContainer();
+                if (!header) return null;
+                // 1) id
+                const byId = header.querySelector("#" + HEADER_BTN_ID);
+                if (byId) return byId;
+                // 2) aria-label or text content match within header only
+                const candidates = header.querySelectorAll("button, a, [role='button'], div, span");
+                for (const el of candidates) {
+                    try {
+                        const aria = (el.getAttribute && el.getAttribute("aria-label")) || "";
+                        const txt = (el.innerText || el.textContent || "").trim();
+                        if (/panduan/i.test(aria) || /(^|[^A-Za-z0-9])panduan([^A-Za-z0-9]|$)/i.test(txt)) return el;
+                    } catch (e) { /* ignore */ }
+                }
+                return null;
+            }
+
+            /* ------------------ remove existing floating trigger ------------------ */
+            function removeFloatingTrigger() {
+                const t = document.getElementById(FLOAT_ID) || document.querySelector("[data-ms-onboard-trigger]");
+                if (t) t.remove();
+            }
+
+            /* ------------------ copy style from similar header button ------------------ */
+            function copyStyleToBtn(btn) {
+                const header = findHeaderContainer();
+                if (!header || !btn) return;
+                const candidates = header.querySelectorAll("button, a");
+                let src = null;
+                for (const c of candidates) {
+                    const t = (c.innerText || c.textContent || "").trim();
+                    const aria = (c.getAttribute && c.getAttribute("aria-label")) || "";
+                    if (/Rekomendasi Cepat|Rekomendasi|Pengaturan|Settings/i.test(t) || /rekomendasi|pengaturan|settings/i.test(aria)) {
+                        src = c;
+                        break;
+                    }
+                }
+                if (src && src.classList && src.classList.length) {
+                    try { btn.className = src.className + " ms-onboard-header-btn"; } catch (e) { /* ignore */ }
+                } else {
+                    // fallback look
+                    btn.style.padding = "8px 12px";
+                    btn.style.borderRadius = "999px";
+                    btn.style.border = "1px solid rgba(15,23,42,0.08)";
+                    btn.style.background = "linear-gradient(135deg, rgba(255,255,255,0.95), rgba(245,247,255,0.95))";
+                    btn.style.boxShadow = "0 6px 16px rgba(2,6,23,0.08)";
+                    btn.style.fontWeight = "700";
+                }
+            }
+
+            /* ------------------ bind Panduan click (idempotent) ------------------ */
+            function bindHeaderClick(button) {
+                if (!button) return;
+                if (button.dataset.bound === "1") return;
+                button.dataset.bound = "1";
+                // NOT passive — we call preventDefault
+                button.addEventListener("click", function (e) {
+                    if (e && e.preventDefault) e.preventDefault();
+                    // open overlay without reload
+                    removeExistingOverlay();
+                    buildOnboarding();
+                }, false);
+            }
+
+            /* ------------------ inject header Panduan button if missing ------------------ */
+            function injectHeaderPanduanButton() {
+                const exists = headerHasPanduanEl();
+                if (exists) {
+                    bindHeaderClick(exists);
+                    removeFloatingTrigger();
+                    return;
+                }
+
+                const header = findHeaderContainer();
+                if (!header) return;
+
+                // create button
+                const btn = document.createElement("button");
+                btn.id = HEADER_BTN_ID;
+                btn.setAttribute("aria-label", "Panduan MediSkill AI");
+                btn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px"><span style="font-size:14px">💬</span><span>Panduan</span></span>';
+                copyStyleToBtn(btn);
+
+                // attempt insertion near a similar control
+                let inserted = false;
+                try {
+                    const headerChildren = header.querySelectorAll("button, a, [role='button']");
+                    for (const c of headerChildren) {
+                        const t = (c.innerText || c.textContent || "").trim();
+                        if (/Rekomendasi Cepat|Rekomendasi|Pengaturan|Settings/i.test(t)) {
+                            c.insertAdjacentElement("afterend", btn);
+                            inserted = true;
+                            break;
+                        }
+                    }
+                } catch (e) { inserted = false; }
+
+                if (!inserted) {
+                    try { header.appendChild(btn); } catch (e) { /* ignore */ }
+                }
+
+                bindHeaderClick(btn);
+                removeFloatingTrigger();
+            }
+
+            /* ------------------ ensure floating trigger only if header lacks Panduan ------------------ */
+            function ensureFloatingTrigger() {
+                if (headerHasPanduanEl()) {
+                    const fl = document.getElementById(FLOAT_ID);
+                    if (fl) fl.remove();
+                    return;
+                }
+                if (document.getElementById(FLOAT_ID)) return;
+
+                const t = document.createElement("button");
+                t.id = FLOAT_ID;
+                t.className = "ms-btn ghost";
+                t.style.position = "fixed";
+                t.style.right = "16px";
+                t.style.bottom = "16px";
+                t.style.zIndex = 99998;
+                t.style.padding = "10px 14px";
+                t.style.borderRadius = "999px";
+                // match header look if possible - minimal style
+                t.style.background = "linear-gradient(135deg,#ffffff,#f5f7ff)";
+                t.style.boxShadow = "0 6px 16px rgba(0,0,0,0.08)";
+                t.style.border = "1px solid rgba(0,0,0,0.06)";
+                t.style.fontWeight = "700";
+
+                t.innerHTML = "💬 Panduan";
+                // NOT passive — to be consistent if preventDefault used later
+                t.addEventListener("click", function (ev) {
+                    if (ev && ev.preventDefault) ev.preventDefault();
+                    removeExistingOverlay();
+                    buildOnboarding();
+                }, false);
+
+                document.body.appendChild(t);
+            }
+
+            /* ------------------ remove any existing overlay ------------------ */
+            function removeExistingOverlay() {
+                const old = document.querySelector(".ms-overlay");
+                if (old) old.remove();
+            }
+
+            /* ------------------ slides content (user-friendly) ------------------ */
+            const slidesContent = [
+                {
+                    emoji: '🤖',
+                    title: 'Introduction',
+                    desc:
+                        'MediSkill AI adalah asisten virtual yang membantu menjawab pertanyaan kesehatan ringan, memberikan informasi layanan, dan memberi panduan awal sebelum Anda pergi ke fasilitas kesehatan. MediSkill AI tidak menggantikan dokter, tetapi membantu Anda memahami langkah pertama yang sebaiknya diambil.'
+                },
+
+                {
+                    emoji: '☰',
+                    title: 'Rekomendasi Cepat',
+                    desc:
+                        'Di bagian atas chat terdapat tombol-tombol kecil (chip) seperti “Tanya Keluhan” atau “Rekomendasi Obat”. Tombol ini memudahkan Anda memulai percakapan tanpa perlu mengetik panjang. Cukup tekan tombolnya, dan sistem akan langsung memberi bantuan.'
+                },
+
+                {
+                    emoji: '⚙️',
+                    title: 'Pengaturan',
+                    desc:
+                        'Di menu Pengaturan Anda bisa melakukan beberapa hal penting: mengulang percakapan dari awal (Reset Chat), menghapus data yang tersimpan di perangkat (Hapus Data), dan mengaktifkan Mode Gelap agar tampilan lebih nyaman di mata, terutama di malam hari.'
+                },
+
+                {
+                    emoji: '📘',
+                    title: 'Tombol Panduan',
+                    desc:
+                        'Jika sewaktu-waktu Anda bingung menggunakan fitur MediSkill AI, cukup tekan tombol “Panduan” di bagian atas layar. Panduan ini bisa dibuka kapan saja dan menjelaskan fungsi-fungsi utama dengan sederhana.'
+                },
+
+                {
+                    emoji: '⚡',
+                    title: 'Panel Pintas di Chat',
+                    desc:
+                        'Saat AI memberikan balasan, terkadang muncul tombol biru “Lihat Panel Pintas MediSkill AI”. Panel ini berisi menu cepat untuk memilih layanan tanpa harus mengetik. Cocok untuk pengguna yang ingin navigasi praktis.'
+                },
+
+                {
+                    emoji: "🧭",
+                    title: "Kategori Utama",
+                    desc: `
+                        Panel Pintas berisi beberapa pilihan utama yang membantu Anda menemukan layanan dengan cepat:
+                        <br><br>
+                        <ul style="margin-left:16px; padding-left:16px; line-height:1.45;">
+                            <li><strong>Tanya Dokter</strong> – konsultasi keluhan ringan</li>
+                            <li><strong>Info Biaya</strong> – melihat paket & perkiraan harga layanan</li>
+                            <li><strong>Cek Fasilitas</strong> – melihat layanan seperti Telemed, Lab, Fisioterapi, dll.</li>
+                            <li><strong>Pelatihan</strong> – pengembangan soft skills & kursus singkat</li>
+                            <li><strong>About</strong> – informasi tentang aplikasi MediSkill AI</li>
+                        </ul>
+                    `,
+                    features: true
+                },
+
+                {
+                    emoji: '💳',
+                    title: 'Info Biaya',
+                    desc:
+                        'Di bagian Info Biaya, Anda dapat melihat penjelasan paket layanan, estimasi biaya, dan opsi pembayaran. Tersedia juga tombol “Cek Asuransi” untuk mengetahui apakah layanan tertentu dapat ditanggung oleh asuransi yang Anda miliki.'
+                },
+
+                {
+                    emoji: '🏥',
+                    title: 'Fasilitas & Layanan',
+                    desc:
+                        'Di sini Anda bisa mengenal berbagai jenis layanan seperti Telemedicine (konsultasi online), Laboratorium, Fisioterapi, hingga Konseling Psikologi. Setiap layanan memiliki penjelasan singkat agar Anda mudah memilih sesuai kebutuhan.'
+                },
+
+                {
+                    emoji: '🎓',
+                    title: 'Pelatihan Soft Skills',
+                    desc:
+                        'Fitur ini membantu Anda meningkatkan keterampilan penting seperti manajemen waktu, komunikasi, pengambilan keputusan, hingga persiapan presentasi. Materinya dibuat singkat dan mudah dipahami, cocok untuk pelajar, pekerja, maupun orang tua.'
+                },
+
+                {
+                    emoji: 'ℹ️',
+                    title: 'Tentang MediSkill AI',
+                    desc:
+                        'MediSkill AI dibuat untuk membantu siapa saja mendapatkan informasi awal yang jelas dan ramah. Fokusnya adalah memberi arahan sederhana agar Anda tidak bingung dalam mengambil langkah pertama. Aplikasi ini bukan alat diagnosis medis.'
+                },
+
+                {
+                    emoji: '✨',
+                    title: 'Siap Mulai?',
+                    desc:
+                        'Anda dapat menutup panduan ini dan mulai bertanya apa saja—mulai dari keluhan kesehatan ringan, informasi layanan, hingga panduan keterampilan. Jika butuh bantuan lagi, cukup tekan tombol “Panduan”.'
+                }
+            ];
+
+            function buildOnboarding() {
+
+                // remove any existing overlay first
+                removeExistingOverlay();
+
+                // --- Build overlay (overlay HTML) ---
+                const overlay = document.createElement("div");
+                overlay.className = "ms-overlay";
+
+                overlay.innerHTML = `
+                <div class="ms-card" role="dialog" aria-modal="true" aria-label="Panduan MediSkill AI">
+                    <div class="ms-left">
+                        <div class="ms-ai-photo" aria-hidden="true">
+                            <!-- gunakan <img> agar src dapat dimuat + fallback akan di-handle via JS -->
+                            <img src="/static/images/profile.png" alt="MediSkill AI">
+                        </div>
+
+                        <p class="ms-left-desc">
+                            MediSkill AI membantu menjawab pertanyaan kesehatan ringan, memberi informasi layanan & perkiraan biaya,
+                            serta memberikan panduan singkat untuk meningkatkan keterampilan kerja dan produktivitas sehari-hari.
+                            Ikuti panduan ini untuk mengenal fitur utama dengan mudah.
+                        </p>
+                    </div>
+
+                    <div class="ms-right">
+                    <div class="ms-header">
+                        <div>
+                        <h3>Selamat datang</h3>
+                        <p>Panduan singkat MediSkill AI</p>
+                        </div>
+                        <button class="ms-close" id="ms-close" aria-label="Tutup">✕</button>
+                    </div>
+
+                    <div class="ms-slides-wrap">
+                        <!-- INI area yang discroll -->
+                        <div class="ms-slides" id="ms-slides" tabindex="0"></div>
+
+                        <!-- Kontrol: DI LUAR .ms-slides sehingga selalu terlihat -->
+                        <div class="ms-controls">
+                        <div class="ms-dots" id="ms-dots" aria-hidden="false"></div>
+                        <div style="display:flex;gap:8px;align-items:center">
+                            <button class="ms-btn ghost" id="ms-back">Kembali</button>
+                            <button class="ms-btn ghost" id="ms-skip">Lewati</button>
+                            <button class="ms-btn primary" id="ms-next">Selanjutnya</button>
+                        </div>
+                        </div>
+
+                        <div class="ms-footer">
+                        <label class="ms-never"><input type="checkbox" id="ms-never"> Jangan tampilkan lagi</label>
+                        <!-- jika mau tambahkan ruang kecil di kanan footer -->
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                `;
+
+                document.body.appendChild(overlay);
+
+                // ensure close button is inside header and aligned (idempotent)
+                (function normalizeClosePos() {
+                const overlay = document.querySelector('.ms-overlay');
+                if (!overlay) return;
+                const header = overlay.querySelector('.ms-header');
+                const closeBtn = overlay.querySelector('.ms-close') || document.getElementById('ms-close');
+                if (!header || !closeBtn) return;
+                // move button into header if not already
+                if (closeBtn.parentElement !== header) {
+                    // remove from old parent safely
+                    try { closeBtn.remove(); } catch (e) { /* ignore */ }
+                    header.appendChild(closeBtn);
+                }
+                // ensure accessible attributes
+                closeBtn.setAttribute('aria-label', 'Tutup panduan');
+                })();
+
+                // --- Create avatar with robust styling + fallback ---
+                (function setupAvatar() {
+                    // Replace this path with actual image path you host
+                    const AVATAR_SRC = "/static/images/profile.png";
+
+                    // find avatar container that exists in the overlay
+                    const ph = document.querySelector('.ms-left .ms-ai-photo');
+                    if (!ph) return;
+
+                    // apply strict circle container styles to avoid gaps
+                    ph.style.width = "110px";
+                    ph.style.height = "110px";
+                    ph.style.borderRadius = "50%";
+                    ph.style.overflow = "hidden";
+                    ph.style.display = "flex";
+                    ph.style.alignItems = "center";
+                    ph.style.justifyContent = "center";
+                    ph.style.background = "transparent";
+                    ph.style.padding = "0";
+                    ph.style.boxSizing = "border-box";
+                    ph.style.boxShadow = "0 8px 16px rgba(0,0,0,0.16)";
+                    ph.style.border = "6px solid rgba(255,255,255,0.06)"; // subtle ring (optional)
+
+                    // create <img> (replace existing image element if present)
+                    const existingImg = ph.querySelector('img');
+                    if (existingImg) existingImg.remove();
+
+                    const img = document.createElement("img");
+                    img.alt = "MediSkill AI";
+                    img.decoding = "async";
+                    img.loading = "eager"; // eager ensures it's loaded for overlay
+                    img.src = AVATAR_SRC;
+
+                    // ensure img fills full circle with no gap
+                    img.style.width = "100%";
+                    img.style.height = "100%";
+                    img.style.objectFit = "cover";
+                    img.style.display = "block";
+                    img.style.borderRadius = "50%";
+                    img.style.boxShadow = "none";
+                    img.style.background = "linear-gradient(135deg,#ffffff,#f0f6ff)";
+
+                    // fallback handler: if image fails, replace with initials fallback element
+                    img.addEventListener("error", () => {
+                        if (img.parentElement) img.remove();
+
+                        const fallback = document.createElement("div");
+                        fallback.style.width = "100%";
+                        fallback.style.height = "100%";
+                        fallback.style.borderRadius = "50%";
+                        fallback.style.display = "grid";
+                        fallback.style.placeItems = "center";
+                        fallback.style.fontWeight = "800";
+                        fallback.style.color = "#ffffff";
+                        fallback.style.background = "linear-gradient(135deg,#0ea5e9,#6366f1)";
+                        fallback.style.fontSize = "20px";
+                        fallback.textContent = "M|AI"; // initials
+
+                        ph.appendChild(fallback);
+                    });
+
+                    // on load: ensure any previously appended fallbacks removed
+                    img.addEventListener("load", () => {
+                        const existing = ph.querySelector("div");
+                        if (existing && existing.tagName === "DIV" && existing.textContent === "M|AI") {
+                            existing.remove();
+                        }
+                    });
+
+                    // append image (fallback will attach itself on error)
+                    ph.appendChild(img);
+
+                    // optional: make descriptive paragraph styling neat
+                    const leftDesc = ph.parentElement.querySelector(".ms-left-desc");
+                    if (leftDesc) {
+                        leftDesc.style.color = "rgba(255,255,255,0.95)";
+                        leftDesc.style.fontSize = "13px";
+                        leftDesc.style.lineHeight = "1.45";
+                        leftDesc.style.maxWidth = "220px";
+                        leftDesc.style.marginTop = "12px";
+                        leftDesc.style.textAlign = "center";
+                        // add subtle padding so paragraph doesn't touch avatar ring
+                        leftDesc.style.padding = "6px 4px";
+                    }
+                })();
+
+                // --- IMPORTANT: declare sc and dots BEFORE we use them in the forEach loop ---
+                const sc = document.getElementById("ms-slides");
+                const dotsContainer = document.getElementById("ms-dots");
+
+                // build slides (slidesContent assumed to be in scope)
+                slidesContent.forEach((s, i) => {
+                    const slide = document.createElement("div");
+                    slide.className = "ms-slide";
+                    slide.dataset.index = i;
+
+                    slide.innerHTML = `
+                        <div class="ms-slide-content">
+                            <div class="ms-slide-inner">
+                                <div style="display:flex;gap:12px;align-items:flex-start">
+                                    <div class="ms-emoji">${s.emoji}</div>
+                                    <div style="flex:1">
+                                        <div class="ms-slide-title">${s.title}</div>
+                                        <div class="ms-slide-desc"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    // set desc as HTML (so <ul> etc render correctly)
+                    const descEl = slide.querySelector(".ms-slide-desc");
+                    if (descEl) descEl.innerHTML = s.desc || "";
+
+                    // if features grid is needed, append it AFTER description
+                    if (s.features) {
+                        const grid = document.createElement("div");
+                        grid.className = "ms-feature-grid";
+                        grid.innerHTML = `
+                            <div class="ms-feature"><div class="icon">👩‍⚕️</div><div style="font-size:13px"><strong>Tanya Dokter</strong><div style="font-size:12px;color:var(--muted);margin-top:6px">Konsultasi keluhan singkat</div></div></div>
+                            <div class="ms-feature"><div class="icon">💳</div><div style="font-size:13px"><strong>Info Biaya</strong><div style="font-size:12px;color:var(--muted);margin-top:6px">Paket & kisaran harga</div></div></div>
+                            <div class="ms-feature"><div class="icon">🏥</div><div style="font-size:13px"><strong>Cek Fasilitas</strong><div style="font-size:12px;color:var(--muted);margin-top:6px">Telemed, Lab, Fisio</div></div></div>
+                            <div class="ms-feature"><div class="icon">🎓</div><div style="font-size:13px"><strong>Pelatihan</strong><div style="font-size:12px;color:var(--muted);margin-top:6px">Soft skills & kursus</div></div></div>
+                            <div class="ms-feature"><div class="icon">ℹ️</div><div style="font-size:13px"><strong>About</strong><div style="font-size:12px;color:var(--muted);margin-top:6px">Tentang layanan</div></div></div>
+                        `;
+                        slide.querySelector(".ms-slide-inner").appendChild(grid);
+                    }
+
+                    sc.appendChild(slide);
+
+                    // create dot and attach normal click listener (NOT passive)
+                    const dot = document.createElement("div");
+                    dot.className = "ms-dot";
+                    dot.dataset.index = i;
+                    dot.addEventListener("click", function (e) {
+                        // no preventDefault needed here
+                        showSlide(i);
+                    });
+                    dotsContainer.appendChild(dot);
+                });
+
+                // control element refs
+                let current = 0;
+                const back = document.getElementById("ms-back");
+                const next = document.getElementById("ms-next");
+                const skip = document.getElementById("ms-skip");
+                const close = document.getElementById("ms-close");
+                const never = document.getElementById("ms-never");
+                if (never) {
+                    never.checked = localStorage.getItem(KEY) === "dismissed";
+                }
+
+                function showSlide(i) {
+                    current = Math.max(0, Math.min(slidesContent.length - 1, i));
+                    document.querySelectorAll('.ms-slide').forEach(s => s.classList.remove('active'));
+                    const active = document.querySelector('.ms-slide[data-index="' + current + '"]');
+                    if (active) active.classList.add('active');
+
+                    document.querySelectorAll('.ms-dot').forEach(d => d.classList.toggle('active', +d.dataset.index === current));
+
+                    back.style.visibility = current === 0 ? 'hidden' : 'visible';
+                    next.textContent = current === slidesContent.length - 1 ? 'Selesai' : 'Selanjutnya';
+
+                    // Jangan auto-scroll
+                }
+
+                const leftDesc = document.querySelector('.ms-left-desc');
+                if (leftDesc) {
+                    requestAnimationFrame(() => {
+                        // small delay then add visible
+                        setTimeout(() => leftDesc.classList.add('visible'), 60);
+                    });
+                }
+
+                function finish() {
+                    if (never && never.checked) {
+                        localStorage.setItem(KEY, "dismissed");
+                    } else {
+                        localStorage.removeItem(KEY);   // ← user uncheck → reset
+                    }
+                    removeExistingOverlay();
+                    ensureFloatingTrigger();
+                }
+
+                back.addEventListener("click", function () { showSlide(current - 1); });
+                next.addEventListener("click", function () { current < slidesContent.length - 1 ? showSlide(current + 1) : finish(); });
+                skip.addEventListener("click", finish);
+                close.addEventListener("click", finish);
+
+                // fallback avatar: jika img gagal load, tampilkan lingkaran dengan inisial
+                (function avatarFallback() {
+                    const ph = document.querySelector('.ms-ai-photo');
+                    if (!ph) return;
+                    const img = ph.querySelector('img');
+                    if (!img) return;
+                    img.addEventListener('error', () => {
+                        try { img.remove(); } catch (e) { /* ignore */ }
+                        const fallback = document.createElement('div');
+                        fallback.style.width = '100%';
+                        fallback.style.height = '100%';
+                        fallback.style.borderRadius = '50%';
+                        fallback.style.display = 'grid';
+                        fallback.style.placeItems = 'center';
+                        fallback.style.fontSize = '18px';
+                        fallback.style.fontWeight = '800';
+                        fallback.style.color = '#ffffff';
+                        fallback.style.background = 'linear-gradient(135deg,#0ea5e9,#6366f1)';
+                        fallback.textContent = 'M|AI';
+                        ph.appendChild(fallback);
+                    });
+                })();
+
+                // show first slide
+                showSlide(0);
+            }
+
+            /* ------------------ initialization ------------------ */
+            document.addEventListener("DOMContentLoaded", function () {
+                // inject header panduan button if missing (and bind)
+                injectHeaderPanduanButton();
+
+                // ALWAYS show onboarding on load, UNLESS user explicitly opted out earlier
+                const optedOut = localStorage.getItem(KEY) === "dismissed";
+                if (!optedOut) {
+                    buildOnboarding();
+                }
+                if (!optedOut) {
+                    // small delay so UI paint selesai
+                    setTimeout(() => {
+                        try { buildOnboarding(); } catch (e) { console.warn("Onboard open failed", e); }
+                    }, 80);
+                } else {
+                    // if user opted out, keep the floating trigger visible when header lacks button
+                    ensureFloatingTrigger();
+                }
+
+                // observe header/DOM changes to keep triggers in sync
+                const obs = new MutationObserver(() => {
+                    try {
+                        injectHeaderPanduanButton();
+                        if (!headerHasPanduanEl()) ensureFloatingTrigger();
+                        else removeFloatingTrigger();
+                    } catch (e) { /* ignore */ }
+                });
+                obs.observe(document.documentElement || document.body, { childList: true, subtree: true, attributes: true });
+            });
+
+            // expose dev helper
+            window._ms_removeFloatingPanduan = removeFloatingTrigger;
+            // expose global show function (safe) - opens overlay without reload
+            window.showMediSkillOnboarding = function () {
+                removeExistingOverlay();
+                buildOnboarding();
+            };
+
+        })();
+
         /* ============================================================
             AUREX AI — Enhanced (no typing effect), Dark Mode, no Quick Replies
             - preserve existing behavior; remove per-char typing
@@ -8504,7 +9359,7 @@
                 </div>
             `;
         }
-
     </script>
+    
 </body>
 </html>
