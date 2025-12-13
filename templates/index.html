@@ -4965,228 +4965,175 @@
         }
 
             /* =====================================================
-               MOBILE FINAL – CLEAN & STABLE
-               Header • Chat • Onboarding (NO CUT / NO DOUBLE SCROLL)
+               MOBILE STABLE LAYOUT (AMAN & TIDAK TERPOTONG)
                ===================================================== */
             @media (max-width: 768px) {
             
-              /* =========================
-                 GLOBAL MOBILE SAFETY
-                 ========================= */
+              /* =====================
+                 GLOBAL
+                 ===================== */
               html, body {
                 height: 100%;
-                overscroll-behavior: none;
-              }
-            
-              body.ms-onboard-open {
                 overflow: hidden;
-                height: 100vh;
               }
             
-              /* =========================
-                 HEADER (TOP BAR)
-                 ========================= */
-              .header {
-                padding: 14px 14px 10px;
+              body {
+                background: linear-gradient(135deg, #4facfe, #00f2fe);
               }
             
-              /* tombol: Rekomendasi / Panduan / Pengaturan */
-              .header-actions,
-              .header-buttons {
+              /* =====================
+                 APP CONTAINER
+                 ===================== */
+              .container {
+                height: 100%;
+                max-width: 100%;
                 display: flex;
-                gap: 8px;
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: none;
-                padding-bottom: 4px;
+                flex-direction: column;
+                margin: 0;
+                border-radius: 0;
               }
             
-              .header-actions::-webkit-scrollbar,
-              .header-buttons::-webkit-scrollbar {
-                display: none;
-              }
-            
-              .header-actions button,
-              .header-buttons button {
+              /* =====================
+                 HEADER (BOLEH TINGGI)
+                 ===================== */
+              .header {
                 flex-shrink: 0;
-                padding: 7px 12px;
-                font-size: 12.5px;
-                border-radius: 999px;
-                white-space: nowrap;
-                line-height: 1;
+                padding: 18px 16px 14px;
+                gap: 12px;
               }
             
-              .header-actions button span {
-                display: inline-flex;
-                align-items: center;
+              .header-main {
+                align-items: flex-start;
+              }
+            
+              .header h1 {
+                font-size: 20px;
+                line-height: 1.3;
+              }
+            
+              .header-right {
                 gap: 6px;
               }
             
-              /* =========================
-                 CHAT LAYOUT (UTAMA)
-                 ========================= */
+              /* tombol boleh scroll horizontal */
+              .header-actions {
+                display: flex;
+                gap: 8px;
+                overflow-x: auto;
+                scrollbar-width: none;
+              }
+            
+              .header-actions::-webkit-scrollbar {
+                display: none;
+              }
+            
+              .header-actions button {
+                flex-shrink: 0;
+                padding: 7px 12px;
+                font-size: 12px;
+                border-radius: 999px;
+              }
+            
+              /* badge turun ke baris bawah */
+              .header-badges {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+              }
+            
+              /* =====================
+                 TAB
+                 ===================== */
+              .tabs {
+                flex-shrink: 0;
+                padding: 12px;
+              }
+            
+              /* =====================
+                 CHAT AREA (FLEXIBLE)
+                 ===================== */
               .chat-wrapper {
                 flex: 1;
                 display: flex;
                 flex-direction: column;
-                padding: 10px 14px 0;
+                padding: 12px 12px 0;
                 overflow: hidden;
               }
             
               .chat-container {
                 flex: 1;
                 overflow-y: auto;
-                padding: 16px 14px;
-                border-radius: 16px;
+                border-radius: 18px;
+                padding: 16px;
               }
             
-              /* INPUT AREA – SELALU TERLIHAT */
+              /* =====================
+                 INPUT AREA (SELALU TERLIHAT)
+                 ===================== */
               .input-area {
                 flex-shrink: 0;
-                padding: 10px 12px;
+                padding: 12px;
+                padding-bottom: env(safe-area-inset-bottom);
                 background: #ffffff;
-                border-top: 1px solid rgba(148,163,184,0.25);
-                padding-bottom: calc(10px + env(safe-area-inset-bottom));
               }
             
-              body.dark .input-area {
-                background: rgba(15,23,42,0.98);
-                border-top-color: rgba(148,163,184,0.2);
+              .input-area input {
+                height: 44px;
+                font-size: 14px;
               }
             
-              /* =========================
-                 ONBOARDING / PANDUAN
-                 ========================= */
-              .ms-overlay {
-                position: fixed;
-                inset: 0;
-                padding: 0;
-                z-index: 99999;
-                display: flex;
+              .input-area button {
+                height: 44px;
+                font-size: 14px;
               }
             
-              .ms-card {
-                width: 100%;
-                height: 100vh;
-                display: flex;
-                flex-direction: column;
-                border-radius: 0;
+              /* =================================================
+                 ONBOARDING / PANDUAN (FULL & AMAN)
+                 ================================================= */
+              body.ms-onboard-open {
                 overflow: hidden;
               }
             
-              /* HERO / TOP */
+              .ms-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 99999;
+                background: rgba(0,0,0,0.35);
+              }
+            
+              .ms-card {
+                height: 100%;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                border-radius: 0;
+              }
+            
               .ms-left {
                 flex-shrink: 0;
-                padding: 14px;
-                gap: 8px;
+                padding: 16px;
               }
             
-              .ms-ai-photo {
-                width: 64px;
-                height: 64px;
-              }
-            
-              .ms-left-desc {
-                font-size: 12.5px;
-                line-height: 1.45;
-                padding: 8px 10px;
-              }
-            
-              /* CONTENT */
               .ms-right {
                 flex: 1;
                 display: flex;
                 flex-direction: column;
-                padding: 12px 14px;
                 overflow: hidden;
+                padding: 14px;
               }
             
-              .ms-header {
-                flex-shrink: 0;
-              }
-            
-              .ms-header h3 {
-                font-size: 15.5px;
-              }
-            
-              .ms-header p {
-                font-size: 12.5px;
-              }
-            
-              /* =========================
-                 SLIDES (SATU-SATUNYA SCROLL)
-                 ========================= */
+              /* HANYA INI YANG SCROLL */
               .ms-slides {
                 flex: 1;
                 overflow-y: auto;
-                padding: 6px 0 10px;
                 -webkit-overflow-scrolling: touch;
               }
             
-              .ms-slide-title {
-                font-size: 14.5px;
-              }
-            
-              .ms-slide-desc {
-                font-size: 13.5px;
-                line-height: 1.55;
-              }
-            
-              .ms-slide-desc ul {
-                margin-left: 14px;
-              }
-            
-              /* =========================
-                 FEATURE GRID
-                 ========================= */
-              .ms-feature-grid {
-                grid-template-columns: 1fr;
-                gap: 10px;
-              }
-            
-              .ms-feature {
-                padding: 12px;
-              }
-            
-              /* =========================
-                 CONTROLS & FOOTER
-                 ========================= */
               .ms-controls,
               .ms-footer {
                 flex-shrink: 0;
               }
             
-              .ms-controls {
-                padding-top: 10px;
-                gap: 10px;
-              }
-            
-              .ms-btn {
-                height: 44px;
-                font-size: 14px;
-                border-radius: 14px;
-              }
-            
-              .ms-dots {
-                justify-content: center;
-              }
-            
-              .ms-never {
-                font-size: 12.5px;
-              }
-            
-              /* =========================
-                 SWIPE HINT
-                 ========================= */
-              .ms-slides::after {
-                content: "⇆ Geser untuk lanjut";
-                display: block;
-                text-align: center;
-                font-size: 11.5px;
-                color: rgba(15,23,42,0.45);
-                margin-top: 10px;
-              }
             }
     </style>
 </head>
