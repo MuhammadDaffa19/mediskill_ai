@@ -4965,9 +4965,8 @@
         }
 
             /* =====================================================
-               MOBILE FINAL FIX
-               - Header Action (Rekomendasi / Panduan / Pengaturan)
-               - Onboarding / Panduan
+               MOBILE FINAL – CLEAN & STABLE
+               Header • Chat • Onboarding (NO CUT / NO DOUBLE SCROLL)
                ===================================================== */
             @media (max-width: 768px) {
             
@@ -4976,26 +4975,31 @@
                  ========================= */
               html, body {
                 height: 100%;
+                overscroll-behavior: none;
               }
             
               body.ms-onboard-open {
                 overflow: hidden;
                 height: 100vh;
-                overscroll-behavior: none;
               }
             
               /* =========================
-                 HEADER ACTION FIX
+                 HEADER (TOP BAR)
                  ========================= */
+              .header {
+                padding: 14px 14px 10px;
+              }
+            
+              /* tombol: Rekomendasi / Panduan / Pengaturan */
               .header-actions,
               .header-buttons {
                 display: flex;
-                flex-wrap: nowrap;
                 gap: 8px;
-                overflow-x: auto;                 /* ← tidak kepotong */
+                flex-wrap: nowrap;
+                overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
                 scrollbar-width: none;
-                padding-bottom: 4px;              /* cegah clip shadow */
+                padding-bottom: 4px;
               }
             
               .header-actions::-webkit-scrollbar,
@@ -5006,70 +5010,90 @@
               .header-actions button,
               .header-buttons button {
                 flex-shrink: 0;
-                padding: 8px 12px;
-                font-size: 13px;
+                padding: 7px 12px;
+                font-size: 12.5px;
                 border-radius: 999px;
                 white-space: nowrap;
                 line-height: 1;
               }
             
-              .header-actions button span,
-              .header-buttons button span {
+              .header-actions button span {
                 display: inline-flex;
                 align-items: center;
                 gap: 6px;
               }
             
               /* =========================
-                 ONBOARDING OVERLAY
+                 CHAT LAYOUT (UTAMA)
+                 ========================= */
+              .chat-wrapper {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                padding: 10px 14px 0;
+                overflow: hidden;
+              }
+            
+              .chat-container {
+                flex: 1;
+                overflow-y: auto;
+                padding: 16px 14px;
+                border-radius: 16px;
+              }
+            
+              /* INPUT AREA – SELALU TERLIHAT */
+              .input-area {
+                flex-shrink: 0;
+                padding: 10px 12px;
+                background: #ffffff;
+                border-top: 1px solid rgba(148,163,184,0.25);
+                padding-bottom: calc(10px + env(safe-area-inset-bottom));
+              }
+            
+              body.dark .input-area {
+                background: rgba(15,23,42,0.98);
+                border-top-color: rgba(148,163,184,0.2);
+              }
+            
+              /* =========================
+                 ONBOARDING / PANDUAN
                  ========================= */
               .ms-overlay {
                 position: fixed;
                 inset: 0;
                 padding: 0;
-                align-items: stretch;
-                justify-content: stretch;
                 z-index: 99999;
+                display: flex;
               }
             
               .ms-card {
                 width: 100%;
                 height: 100vh;
-                max-height: 100vh;
-                border-radius: 0;
+                display: flex;
                 flex-direction: column;
-                box-shadow: none;
+                border-radius: 0;
                 overflow: hidden;
               }
             
-              /* =========================
-                 TOP / HERO
-                 ========================= */
+              /* HERO / TOP */
               .ms-left {
                 flex-shrink: 0;
-                width: 100%;
-                padding: 16px;
+                padding: 14px;
                 gap: 8px;
-                border-radius: 0;
               }
             
               .ms-ai-photo {
                 width: 64px;
                 height: 64px;
-                border-width: 4px;
               }
             
               .ms-left-desc {
-                max-width: 100%;
                 font-size: 12.5px;
                 line-height: 1.45;
                 padding: 8px 10px;
-                margin-top: 2px;
               }
             
-              /* =========================
-                 CONTENT AREA
-                 ========================= */
+              /* CONTENT */
               .ms-right {
                 flex: 1;
                 display: flex;
@@ -5080,7 +5104,6 @@
             
               .ms-header {
                 flex-shrink: 0;
-                align-items: center;
               }
             
               .ms-header h3 {
@@ -5092,17 +5115,13 @@
               }
             
               /* =========================
-                 SLIDES (ONLY SCROLLABLE AREA)
+                 SLIDES (SATU-SATUNYA SCROLL)
                  ========================= */
               .ms-slides {
                 flex: 1;
                 overflow-y: auto;
                 padding: 6px 0 10px;
                 -webkit-overflow-scrolling: touch;
-              }
-            
-              .ms-slide-content {
-                min-height: unset;
               }
             
               .ms-slide-title {
@@ -5149,12 +5168,12 @@
                 border-radius: 14px;
               }
             
-              .ms-never {
-                font-size: 12.5px;
-              }
-            
               .ms-dots {
                 justify-content: center;
+              }
+            
+              .ms-never {
+                font-size: 12.5px;
               }
             
               /* =========================
@@ -5167,14 +5186,6 @@
                 font-size: 11.5px;
                 color: rgba(15,23,42,0.45);
                 margin-top: 10px;
-              }
-            
-              /* =========================
-                 SAFE AREA (iOS NOTCH)
-                 ========================= */
-              .ms-card,
-              .input-area {
-                padding-bottom: env(safe-area-inset-bottom);
               }
             }
     </style>
