@@ -4968,29 +4968,39 @@
                MOBILE STABLE LAYOUT (AMAN & TIDAK TERPOTONG)
                ===================================================== */
             @media (max-width: 768px) {
+              /* =====================
+                 RESET & BOX-SIZING
+                 ===================== */
+              * {
+                box-sizing: border-box;
+              }
             
               /* =====================
                  GLOBAL
                  ===================== */
               html, body {
-                height: 100%;
+                height: 100vh; /* Gunakan vh untuk lebih akurat di mobile */
                 overflow: hidden;
+                margin: 0;
+                padding: 0;
               }
             
               body {
                 background: linear-gradient(135deg, #4facfe, #00f2fe);
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* Pastikan font smooth */
               }
             
               /* =====================
                  APP CONTAINER
                  ===================== */
               .container {
-                height: 100%;
-                max-width: 100%;
+                height: 100vh; /* Sesuaikan dengan viewport */
+                max-width: 100vw; /* Pastikan tidak melebihi lebar viewport */
                 display: flex;
                 flex-direction: column;
                 margin: 0;
                 border-radius: 0;
+                overflow: hidden; /* Pastikan tidak ada overflow dari container */
               }
             
               /* =====================
@@ -5000,6 +5010,7 @@
                 flex-shrink: 0;
                 padding: 18px 16px 14px;
                 gap: 12px;
+                min-height: fit-content; /* Pastikan tinggi minimal sesuai konten */
               }
             
               .header-main {
@@ -5009,6 +5020,7 @@
               .header h1 {
                 font-size: 20px;
                 line-height: 1.3;
+                margin: 0; /* Reset margin untuk hindari potongan */
               }
             
               .header-right {
@@ -5021,6 +5033,7 @@
                 gap: 8px;
                 overflow-x: auto;
                 scrollbar-width: none;
+                -webkit-overflow-scrolling: touch; /* Smooth scroll di iOS */
               }
             
               .header-actions::-webkit-scrollbar {
@@ -5032,6 +5045,7 @@
                 padding: 7px 12px;
                 font-size: 12px;
                 border-radius: 999px;
+                white-space: nowrap; /* Hindari wrap teks di tombol */
               }
             
               /* badge turun ke baris bawah */
@@ -5047,6 +5061,7 @@
               .tabs {
                 flex-shrink: 0;
                 padding: 12px;
+                min-height: fit-content; /* Pastikan tinggi minimal */
               }
             
               /* =====================
@@ -5057,14 +5072,17 @@
                 display: flex;
                 flex-direction: column;
                 padding: 12px 12px 0;
-                overflow: hidden;
+                overflow: hidden; /* Pastikan wrapper tidak overflow */
+                min-height: 0; /* Penting untuk flex item dengan overflow */
               }
             
               .chat-container {
                 flex: 1;
                 overflow-y: auto;
+                -webkit-overflow-scrolling: touch; /* Smooth scroll di iOS */
                 border-radius: 18px;
                 padding: 16px;
+                min-height: 0; /* Pastikan bisa shrink */
               }
             
               /* =====================
@@ -5073,18 +5091,22 @@
               .input-area {
                 flex-shrink: 0;
                 padding: 12px;
-                padding-bottom: env(safe-area-inset-bottom);
+                padding-bottom: calc(12px + env(safe-area-inset-bottom)); /* Sesuaikan dengan safe area */
                 background: #ffffff;
+                min-height: fit-content; /* Pastikan tinggi minimal */
               }
             
               .input-area input {
                 height: 44px;
                 font-size: 14px;
+                width: 100%; /* Pastikan input penuh lebar */
+                box-sizing: border-box;
               }
             
               .input-area button {
                 height: 44px;
                 font-size: 14px;
+                flex-shrink: 0;
               }
             
               /* =================================================
@@ -5099,19 +5121,24 @@
                 inset: 0;
                 z-index: 99999;
                 background: rgba(0,0,0,0.35);
+                display: flex;
+                align-items: center;
+                justify-content: center;
               }
             
               .ms-card {
-                height: 100%;
-                width: 100%;
+                height: 100vh; /* Penuh viewport */
+                width: 100vw;
                 display: flex;
                 flex-direction: column;
                 border-radius: 0;
+                overflow: hidden;
               }
             
               .ms-left {
                 flex-shrink: 0;
                 padding: 16px;
+                min-height: fit-content;
               }
             
               .ms-right {
@@ -5120,6 +5147,7 @@
                 flex-direction: column;
                 overflow: hidden;
                 padding: 14px;
+                min-height: 0;
               }
             
               /* HANYA INI YANG SCROLL */
@@ -5127,13 +5155,29 @@
                 flex: 1;
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
+                min-height: 0;
               }
             
               .ms-controls,
               .ms-footer {
                 flex-shrink: 0;
+                min-height: fit-content;
               }
             
+              /* =====================
+                 TAMBAHAN UNTUK KEAMANAN
+                 ===================== */
+              /* Pastikan semua elemen tidak overflow secara horizontal */
+              .container, .header, .tabs, .chat-wrapper, .input-area, .ms-card {
+                max-width: 100vw;
+                box-sizing: border-box;
+              }
+            
+              /* Hindari teks wrap yang tidak diinginkan */
+              .header h1, .header-actions button {
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+              }
             }
     </style>
 </head>
