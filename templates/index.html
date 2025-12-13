@@ -4965,10 +4965,13 @@
         }
 
             /* =====================================================
-               MOBILE – FINAL SAFE LAYOUT (MATCH HTML)
+               MOBILE – ULTRA SAFE (MATCH HTML REAL)
                ===================================================== */
             @media (max-width: 768px) {
             
+              /* =====================
+                 GLOBAL
+                 ===================== */
               * {
                 box-sizing: border-box;
                 -webkit-tap-highlight-color: transparent;
@@ -4982,32 +4985,32 @@
               }
             
               body {
+                background: linear-gradient(135deg, #4facfe, #00f2fe);
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
                              Roboto, Helvetica, Arial, sans-serif;
-                background: linear-gradient(135deg, #4facfe, #00f2fe);
               }
             
               /* =====================
-                 APP CONTAINER
+                 CONTAINER
                  ===================== */
               .container {
+                min-height: 100dvh;
                 max-width: 420px;
-                height: 100dvh;
                 margin: auto;
                 display: flex;
                 flex-direction: column;
                 background: #fff;
-                border-radius: 22px;
                 overflow: hidden;
+                border-radius: 22px;
                 box-shadow: 0 16px 40px rgba(0,0,0,.25);
               }
             
               /* =====================
-                 HEADER
+                 HEADER (COMPACT)
                  ===================== */
               .header {
                 flex-shrink: 0;
-                padding: 12px 14px;
+                padding: 12px 14px 10px;
               }
             
               .header-main {
@@ -5017,9 +5020,9 @@
               }
             
               .header-left {
+                flex: 1;
                 display: flex;
                 gap: 8px;
-                flex: 1;
                 min-width: 0;
               }
             
@@ -5053,6 +5056,7 @@
               }
             
               .header-actions button {
+                flex-shrink: 0;
                 padding: 6px 10px;
                 font-size: 11px;
                 border-radius: 999px;
@@ -5068,7 +5072,7 @@
             
               .badge-pill {
                 font-size: 10px;
-                padding: 2px 8px;
+                padding: 2px 6px;
                 border-radius: 999px;
               }
             
@@ -5084,6 +5088,7 @@
                 gap: 8px;
               }
             
+              /* MODE TABS */
               .mode-tabs-wrapper {
                 flex-shrink: 0;
               }
@@ -5100,6 +5105,9 @@
                 border-radius: 14px;
               }
             
+              /* =====================
+                 CHAT AREA
+                 ===================== */
               .chat-container {
                 flex: 1;
                 min-height: 0;
@@ -5108,6 +5116,16 @@
                 padding: 14px;
                 background: #f9fafb;
                 border-radius: 16px;
+              }
+            
+              .chat-container h2 {
+                font-size: 15px;
+                margin-bottom: 6px;
+              }
+            
+              .chat-container p {
+                font-size: 13px;
+                line-height: 1.5;
               }
             
               /* =====================
@@ -5120,7 +5138,6 @@
             
               .empty-state-title {
                 font-size: 15px;
-                margin-bottom: 6px;
               }
             
               .empty-state-subtitle {
@@ -5129,7 +5146,7 @@
               }
             
               /* =====================
-                 INPUT AREA
+                 INPUT (FIXED & SAFE)
                  ===================== */
               .input-container {
                 flex-shrink: 0;
@@ -5153,6 +5170,65 @@
               .btn-send {
                 height: 42px;
                 min-width: 72px;
+                font-size: 14px;
+                border-radius: 14px;
+              }
+            
+              /* =====================
+                 ONBOARDING / OVERLAY
+                 ===================== */
+              body.ms-onboard-open {
+                overflow: hidden;
+              }
+            
+              .ms-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 99999;
+                background: rgba(15,23,42,.35);
+              }
+            
+              .ms-card {
+                min-height: 100dvh;
+                display: flex;
+                flex-direction: column;
+                background: #fff;
+              }
+            
+              .ms-left {
+                padding: 14px;
+              }
+            
+              .ms-left-desc {
+                font-size: 12px;
+                line-height: 1.45;
+                padding: 8px 10px;
+              }
+            
+              .ms-right {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                padding: 12px;
+                min-height: 0;
+              }
+            
+              .ms-slides {
+                flex: 1;
+                overflow-y: auto;
+                min-height: 0;
+              }
+            
+              .ms-slide-title {
+                font-size: 14px;
+              }
+            
+              .ms-slide-desc {
+                font-size: 13px;
+              }
+            
+              .ms-controls .ms-btn {
+                height: 42px;
                 font-size: 14px;
                 border-radius: 14px;
               }
