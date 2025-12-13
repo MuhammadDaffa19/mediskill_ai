@@ -4965,152 +4965,139 @@
         }
 
             /* =====================================================
-               MOBILE STABLE LAYOUT (AMAN & TIDAK TERPOTONG)
+               MOBILE – ULTRA SAFE (NO CUT, NO STRESS)
                ===================================================== */
             @media (max-width: 768px) {
-              /* =====================
-                 RESET & BOX-SIZING
-                 ===================== */
-              * {
-                box-sizing: border-box;
-              }
             
               /* =====================
-                 GLOBAL
+                 GLOBAL (JANGAN PAKAI 100vh)
                  ===================== */
               html, body {
-                height: 100vh; /* Gunakan vh untuk lebih akurat di mobile */
-                overflow: hidden;
+                height: 100%;
                 margin: 0;
                 padding: 0;
+                overflow: hidden;
               }
             
               body {
                 background: linear-gradient(135deg, #4facfe, #00f2fe);
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* Pastikan font smooth */
               }
             
               /* =====================
-                 APP CONTAINER
+                 CONTAINER
                  ===================== */
               .container {
-                height: 100vh; /* Sesuaikan dengan viewport */
-                max-width: 100vw; /* Pastikan tidak melebihi lebar viewport */
+                min-height: 100dvh;        /* 🔑 dynamic viewport */
                 display: flex;
                 flex-direction: column;
-                margin: 0;
-                border-radius: 0;
-                overflow: hidden; /* Pastikan tidak ada overflow dari container */
+                overflow: hidden;
               }
             
               /* =====================
-                 HEADER (BOLEH TINGGI)
+                 HEADER (DIPERKECIL HALUS)
                  ===================== */
               .header {
                 flex-shrink: 0;
-                padding: 18px 16px 14px;
-                gap: 12px;
-                min-height: fit-content; /* Pastikan tinggi minimal sesuai konten */
-              }
-            
-              .header-main {
-                align-items: flex-start;
+                padding: 14px 14px 10px;   /* lebih tipis */
+                gap: 8px;
               }
             
               .header h1 {
-                font-size: 20px;
-                line-height: 1.3;
-                margin: 0; /* Reset margin untuk hindari potongan */
+                font-size: 17px;           /* turun dari 20 */
+                line-height: 1.25;
+                margin: 0;
               }
             
-              .header-right {
-                gap: 6px;
+              .header p {
+                font-size: 12px;
               }
             
-              /* tombol boleh scroll horizontal */
+              /* tombol */
               .header-actions {
                 display: flex;
-                gap: 8px;
+                gap: 6px;
                 overflow-x: auto;
                 scrollbar-width: none;
-                -webkit-overflow-scrolling: touch; /* Smooth scroll di iOS */
-              }
-            
-              .header-actions::-webkit-scrollbar {
-                display: none;
               }
             
               .header-actions button {
-                flex-shrink: 0;
-                padding: 7px 12px;
-                font-size: 12px;
+                padding: 6px 10px;
+                font-size: 11px;
                 border-radius: 999px;
-                white-space: nowrap; /* Hindari wrap teks di tombol */
               }
             
-              /* badge turun ke baris bawah */
+              /* badge lebih rapat */
               .header-badges {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 6px;
+                gap: 4px;
+              }
+            
+              .header-badges .badge-pill {
+                font-size: 10px;
+                padding: 2px 6px;
               }
             
               /* =====================
                  TAB
                  ===================== */
               .tabs {
-                flex-shrink: 0;
-                padding: 12px;
-                min-height: fit-content; /* Pastikan tinggi minimal */
+                padding: 8px 10px;
+              }
+            
+              .tab {
+                padding: 10px 14px;
+                font-size: 13px;
               }
             
               /* =====================
-                 CHAT AREA (FLEXIBLE)
+                 CHAT AREA (PRIORITAS)
                  ===================== */
               .chat-wrapper {
                 flex: 1;
                 display: flex;
                 flex-direction: column;
-                padding: 12px 12px 0;
-                overflow: hidden; /* Pastikan wrapper tidak overflow */
-                min-height: 0; /* Penting untuk flex item dengan overflow */
+                padding: 10px;
+                min-height: 0;
               }
             
               .chat-container {
                 flex: 1;
                 overflow-y: auto;
-                -webkit-overflow-scrolling: touch; /* Smooth scroll di iOS */
-                border-radius: 18px;
-                padding: 16px;
-                min-height: 0; /* Pastikan bisa shrink */
+                padding: 14px;
+                border-radius: 16px;
+                min-height: 0;
+              }
+            
+              /* teks pembuka */
+              .chat-container h2 {
+                font-size: 16px;
+              }
+            
+              .chat-container p {
+                font-size: 13px;
               }
             
               /* =====================
-                 INPUT AREA (SELALU TERLIHAT)
+                 INPUT (SELALU TERLIHAT)
                  ===================== */
               .input-area {
                 flex-shrink: 0;
-                padding: 12px;
-                padding-bottom: calc(12px + env(safe-area-inset-bottom)); /* Sesuaikan dengan safe area */
-                background: #ffffff;
-                min-height: fit-content; /* Pastikan tinggi minimal */
+                padding: 10px;
+                padding-bottom: calc(10px + env(safe-area-inset-bottom));
+                background: #fff;
               }
             
               .input-area input {
-                height: 44px;
-                font-size: 14px;
-                width: 100%; /* Pastikan input penuh lebar */
-                box-sizing: border-box;
+                height: 40px;
+                font-size: 13px;
               }
             
               .input-area button {
-                height: 44px;
-                font-size: 14px;
-                flex-shrink: 0;
+                height: 40px;
+                font-size: 13px;
               }
             
               /* =================================================
-                 ONBOARDING / PANDUAN (FULL & AMAN)
+                 ONBOARDING / PANDUAN
                  ================================================= */
               body.ms-onboard-open {
                 overflow: hidden;
@@ -5120,63 +5107,49 @@
                 position: fixed;
                 inset: 0;
                 z-index: 99999;
-                background: rgba(0,0,0,0.35);
-                display: flex;
-                align-items: center;
-                justify-content: center;
               }
             
               .ms-card {
-                height: 100vh; /* Penuh viewport */
-                width: 100vw;
+                min-height: 100dvh;       /* 🔑 bukan 100vh */
                 display: flex;
                 flex-direction: column;
-                border-radius: 0;
-                overflow: hidden;
               }
             
               .ms-left {
-                flex-shrink: 0;
-                padding: 16px;
-                min-height: fit-content;
+                padding: 14px;
+              }
+            
+              .ms-left-desc {
+                font-size: 12px;
+                line-height: 1.45;
+                padding: 8px 10px;
               }
             
               .ms-right {
                 flex: 1;
                 display: flex;
                 flex-direction: column;
-                overflow: hidden;
-                padding: 14px;
+                padding: 12px;
                 min-height: 0;
               }
             
-              /* HANYA INI YANG SCROLL */
               .ms-slides {
                 flex: 1;
                 overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
                 min-height: 0;
               }
             
-              .ms-controls,
-              .ms-footer {
-                flex-shrink: 0;
-                min-height: fit-content;
+              .ms-slide-title {
+                font-size: 14px;
               }
             
-              /* =====================
-                 TAMBAHAN UNTUK KEAMANAN
-                 ===================== */
-              /* Pastikan semua elemen tidak overflow secara horizontal */
-              .container, .header, .tabs, .chat-wrapper, .input-area, .ms-card {
-                max-width: 100vw;
-                box-sizing: border-box;
+              .ms-slide-desc {
+                font-size: 13px;
               }
             
-              /* Hindari teks wrap yang tidak diinginkan */
-              .header h1, .header-actions button {
-                word-wrap: break-word;
-                overflow-wrap: break-word;
+              .ms-controls .ms-btn {
+                height: 40px;
+                font-size: 13px;
               }
             }
     </style>
