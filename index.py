@@ -238,7 +238,7 @@ def setup_rag_chain():
         retriever = vectorstore.as_retriever(search_kwargs={"k": 6})
 
         # 3. Model
-        llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.4, api_key=api_key)
+        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.4, api_key=api_key)
 
         # ========== HISTORY-AWARE RETRIEVER ==========
         contextualize_q_system_prompt = """
@@ -854,5 +854,6 @@ def clear_all():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
+
 
 
